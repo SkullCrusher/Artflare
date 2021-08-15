@@ -5,6 +5,7 @@ import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 // Containers
 import Homepage from './containers/Homepage';
 import Legal from './containers/Legal';
+import Error from './containers/Error';
 
 // Components
 import Navbar from './component/Navbar';
@@ -38,9 +39,13 @@ function App() {
             <Route path="/privacy">
               <Legal type="privacy" />
             </Route>
-            <Route path="/">
+            <Route path="/" exact>
               <Homepage />
             </Route>
+            <Route path='*'>
+              <Error />
+            </Route>
+
           </Switch>
         </div>
         <div className="c-footer">
