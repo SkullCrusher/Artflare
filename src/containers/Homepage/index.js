@@ -1,7 +1,7 @@
 import React       from 'react';
 import { Link }    from "react-router-dom";
 
-import Lobby from "../../component/CreateLobby";
+import Lobby from "../../component/Lobby";
 
 class Homepage extends React.Component {
 
