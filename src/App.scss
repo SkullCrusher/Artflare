@@ -3,12 +3,23 @@
 @import "./styles/legal.scss";
 @import "./styles/homepage.scss";
 @import "./styles/navigation.scss";
+@import "./styles/lobby.scss";
 
 
-
+.c-App {
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  background: #f4f8fe;
+}
 
 .App {
+  width: 960px;
+  margin-left: calc(50% - 480px);
+  height: 100%;
+  position: absolute;
     text-align: center;
+
 }
   
 .App-logo {

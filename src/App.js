@@ -1,5 +1,6 @@
 import logo from './logo.svg';
 import './App.css';
+import 'antd/dist/antd.css';
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom"; 
 
 // Containers
@@ -10,6 +11,7 @@ import Error from './containers/Error';
 // Components
 import Navbar from './component/Navbar';
 import Footer from './component/Footer';
+import Drawable from './component/Drawable';
 
 /*
   <header className="App-header">
@@ -24,32 +26,34 @@ import Footer from './component/Footer';
 function App() {
   return (
     <Router>
-      <div className="App">
-        <div className="c-nav-bar">
-          <Navbar />
-        </div>
-        <div className="content">
-          <Switch>
-            <Route path="/ggg">
-              AA
-            </Route>
-            <Route path="/terms">
-              <Legal type="terms" />
-            </Route>
-            <Route path="/privacy">
-              <Legal type="privacy" />
-            </Route>
-            <Route path="/" exact>
-              <Homepage />
-            </Route>
-            <Route path='*'>
-              <Error />
-            </Route>
+      <div className="c-App">
+        <div className="App">
+          <div className="c-nav-bar">
+            <Navbar />
+          </div>
+          <div className="content">
+            <Switch>
+              <Route path="/ggg">
+                <Drawable />
+              </Route>
+              <Route path="/terms">
+                <Legal type="terms" />
+              </Route>
+              <Route path="/privacy">
+                <Legal type="privacy" />
+              </Route>
+              <Route path="/" exact>
+                <Homepage />
+              </Route>
+              <Route path='*'>
+                <Error />
+              </Route>
 
-          </Switch>
-        </div>
-        <div className="c-footer">
-          <Footer />
+            </Switch>
+          </div>
+          <div className="c-footer">
+            <Footer />
+          </div>
         </div>
       </div>
     </Router>

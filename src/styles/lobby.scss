@@ -1,0 +1,49 @@
+
+.c-lobby {
+    width: 60%;
+    margin-left: calc(20%);
+
+    .title {
+        font-weight: bold;
+        font-size: large;
+    }
+
+    .item {
+        font-size: 12px;
+        text-align: left;
+        width: 50%;
+
+        .sub-title {
+            font-size: normal;
+            letter-spacing: 0.4px;
+        }
+    }
+
+    .left {
+        float: left;
+        padding-right: 5%;
+    }
+
+    .right {
+        float: right;
+
+        .input {
+            width: 55%;
+            display: inline-block;
+        }
+
+        .join-lobby {
+           display: inline-block;
+
+            .button {
+                margin-left: 10px;
+            }
+        }
+
+        .create-lobby {
+            .button {
+                margin-left: 65px;
+            }
+        }
+    }
+}
