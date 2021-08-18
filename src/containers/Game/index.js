@@ -3,7 +3,9 @@ import React from 'react';
 import { Card } from 'antd';
 
 import GameDrawningPage from '../../component/GameDrawingPage';
+import Loading          from '../../component/Loading';
 
+const finishedDrawingText = "Good Job! We are waiting on the others now."
 
 class Game extends React.Component {
 
@@ -48,6 +50,11 @@ class Game extends React.Component {
   };
 
   pageSelector = () => {
+
+    if(true){
+        return <Loading text={finishedDrawingText} />
+    }
+
     switch(this.state.phase){
         case "drawing": return this.generateDrawing();
     }

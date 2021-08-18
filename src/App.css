@@ -119,6 +119,28 @@
       .c-game .game-content .c-drawable .c-settings .c-submit .submit button {
         width: 120px; }
 
+.c-loading {
+  height: 100%; }
+  .c-loading .lds-dual-ring {
+    margin-top: calc(20%);
+    display: inline-block;
+    width: 80px;
+    height: 80px; }
+  .c-loading .lds-dual-ring:after {
+    content: " ";
+    display: block;
+    width: 64px;
+    height: 64px;
+    margin: 8px;
+    border-radius: 50%;
+    border: 6px solid #000;
+    border-color: #000 transparent #000 transparent;
+    animation: lds-dual-ring 1.2s linear infinite; }
+@keyframes lds-dual-ring {
+  0% {
+    transform: rotate(0deg); }
+  100% {
+    transform: rotate(360deg); } }
 .c-App {
   height: 100%;
   width: 100%;
