@@ -141,6 +141,14 @@
     transform: rotate(0deg); }
   100% {
     transform: rotate(360deg); } }
+.c-waiting-page .title {
+  margin-top: 100px; }
+  .c-waiting-page .title .text {
+    font-weight: bold;
+    font-size: 18px; }
+.c-waiting-page .button {
+  margin-top: 30px; }
+
 .c-App {
   height: 100%;
   width: 100%;

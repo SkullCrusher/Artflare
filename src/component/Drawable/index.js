@@ -2,6 +2,8 @@
 import React      from 'react';
 import CanvasDraw from "react-canvas-draw";
 
+let tmp = "";
+
 class Drawable extends React.Component {
 
   state = {
