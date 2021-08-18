@@ -1,9 +1,8 @@
 import React from 'react';
 
-import { Button, Card, Slider } from 'antd';
+import { Button, Slider } from 'antd';
 
 import Drawable from '../../component/Drawable'
-import GameDrawningPage from '../../component/GameDrawingPage';
 
 // I'm colorblind so we are just copied the choices from paint.net (I removed two to even out the lines).
 const colors = [
@@ -11,7 +10,7 @@ const colors = [
     "#FFFFFF", "#808080", "#7F0000", "#7F3300", "#7F6A00", /* "#5B7F00", "#267F00", */ "#007F0E", "#007F46", "#007F7F", "#004A7F", "#00137F", "#21007F", "#57007F", "#7F006E", "#7F0037",
 ]
 
-class Game extends React.Component {
+class GameDrawningPage extends React.Component {
 
   state = {
     pencilDrawingColor: colors[0],
@@ -19,12 +18,9 @@ class Game extends React.Component {
     submitting: false,
   };
   /**
-   * # generateDrawing
-   * (CSP-11): Generate the page for the user to draw on to make their art.
-   * 
-   * return {markup}
+   * # render
    */
-  generateDrawing = () => {
+  render(){
 
     let colorMarkup = []
 
@@ -87,59 +83,6 @@ class Game extends React.Component {
         </div>
     )
   };
-  /**
-   * # generateCaption
-   * (CSP-10): Generate the page for the user to enter captions for the art.
-   * 
-   * return {markup}
-   */
-  generateCaption = () => {
-    return (<div>todo</div>)     
-  };
-  /**
-   * # generateVoting
-   * (CSP-9): Generate the page for the users to vote on the art.
-   * 
-   * return {markup}
-   */
-  generateVoting = () => {
-    return (<div>todo</div>)
-  };
-  /**
-   * # generateWinner
-   * (CSP-12): Generate the page for showing who won.
-   * 
-   * return {markup}
-   */
-  generateWinner = () => {
-    return (<div>todo</div>)
-  };
-
-  pageSelector = () => {
-    return <GameDrawningPage /> // this.generateDrawing();
-  }
-
-  /**
-   * # render
-   */
-  render(){
-
-    const content = this.pageSelector();
-
-    return (
-      <div className="c-game">
-        <div className="user-info">
-            your username "todo", etc
-        </div>
-        <Card className="game-content">
-            <div className="banner">
-                Drawing Phase (1 of 3)
-            </div>
-            {content}
-        </Card>
-      </div>
-    );
-  };
 }
 
-export default Game;
+export default GameDrawningPage;

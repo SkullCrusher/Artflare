@@ -7,13 +7,13 @@ class Drawable extends React.Component {
   state = {
     loadTimeOffset: 5,
     lazyRadius: 0,
-    brushRadius: 6,
-    brushColor: "#000",
-    catenaryColor: "#0a0302",
+    // brushRadius: 6,
+   // brushColor: "#000",
+    catenaryColor: "#f4f8fe", // "#0a0302",
     gridColor: "rgba(150,150,150,0.17)",
     hideGrid: false,
-    canvasWidth: 400,
-    canvasHeight: 400,
+    canvasWidth: 375,
+    canvasHeight: 375,
     disabled: false,
     imgSrc: "",
     saveData: null,
@@ -26,15 +26,19 @@ class Drawable extends React.Component {
   }
 
   render(){
+
+    /*
+      <div onClick={this.debug}></div>
+    */
+
     return (
-      <div>
+      <div className="c-drawable-component">
         <CanvasDraw
           ref={canvasDraw => (this.saveableCanvas = canvasDraw)}
+          brushColor={this.props.brushColor}
+          brushRadius={this.props.brushRadius}
           {...this.state}
         />
-        <div onClick={this.debug}>
-          debug
-        </div>
       </div>
     )
   };

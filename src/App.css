@@ -54,8 +54,70 @@
     float: left;
     width: 100%; }
 
+.c-game .banner {
+  height: 50px;
+  margin-left: -25px;
+  margin-top: -25px;
+  width: calc(100% + 50px);
+  background: #BE2550;
+  color: white;
+  font-weight: bold;
+  font-size: 18px;
+  text-align: center;
+  line-height: 45px; }
 .c-game .game-content {
   height: 800px; }
+  .c-game .game-content .c-drawable .title {
+    height: 60px; }
+    .c-game .game-content .c-drawable .title .text {
+      margin-top: 30px;
+      font-size: 16px; }
+  .c-game .game-content .c-drawable .drawing-container {
+    display: inline-block;
+    width: 378px;
+    border-width: 1px;
+    border-style: solid;
+    border-color: black; }
+  .c-game .game-content .c-drawable .c-settings {
+    padding-left: 10px;
+    display: inline-block;
+    width: 500px;
+    height: 377px; }
+    .c-game .game-content .c-drawable .c-settings .c-pencil-size {
+      float: right;
+      height: 80px;
+      width: 100%; }
+      .c-game .game-content .c-drawable .c-settings .c-pencil-size .text {
+        font-weight: bold; }
+    .c-game .game-content .c-drawable .c-settings .c-colors {
+      float: right; }
+      .c-game .game-content .c-drawable .c-settings .c-colors .text {
+        font-weight: bold;
+        margin-bottom: 10px; }
+      .c-game .game-content .c-drawable .c-settings .c-colors .item {
+        margin-left: 7px;
+        display: inline-block;
+        width: 40px;
+        height: 40px;
+        border-width: 1px;
+        border-style: solid;
+        border-color: black;
+        border-radius: 4px; }
+        .c-game .game-content .c-drawable .c-settings .c-colors .item:hover {
+          border-color: blue;
+          border-width: 3px; }
+      .c-game .game-content .c-drawable .c-settings .c-colors .active {
+        border-color: black;
+        border-width: 3px; }
+    .c-game .game-content .c-drawable .c-settings .c-submit {
+      margin-top: 20px;
+      float: right;
+      width: 100%; }
+      .c-game .game-content .c-drawable .c-settings .c-submit .text {
+        font-weight: bold;
+        margin-bottom: 10px; }
+      .c-game .game-content .c-drawable .c-settings .c-submit .submit button {
+        width: 120px; }
 
 .c-App {
   height: 100%;
