@@ -7,11 +7,13 @@ import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import Homepage from './containers/Homepage';
 import Legal from './containers/Legal';
 import Error from './containers/Error';
+import WhyAds from './containers/WhyAds';
+import Game from './containers/Game';
 
 // Components
 import Navbar from './component/Navbar';
 import Footer from './component/Footer';
-import Drawable from './component/Drawable';
+// import Drawable from './component/Drawable';
 
 /*
   <header className="App-header">
@@ -33,8 +35,11 @@ function App() {
           </div>
           <div className="content">
             <Switch>
-              <Route path="/ggg">
-                <Drawable />
+              <Route path="/why">
+                <WhyAds />
+              </Route>
+              <Route path="/game">
+                <Game />
               </Route>
               <Route path="/terms">
                 <Legal type="terms" />

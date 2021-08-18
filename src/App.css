@@ -13,6 +13,9 @@
 .c-legal .go-back {
   margin-top: 35px; }
 
+.c-navigation {
+  height: 80px; }
+
 .c-lobby {
   width: 60%;
   margin-left: calc(20%); }
@@ -50,6 +53,9 @@
     margin-top: 15px;
     float: left;
     width: 100%; }
+
+.c-game .game-content {
+  height: 800px; }
 
 .c-App {
   height: 100%;
