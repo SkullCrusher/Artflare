@@ -6,7 +6,9 @@ import { Card }    from 'antd';
 import GameDrawningPage from '../../component/GameDrawingPage';
 import GameWaitingPage  from '../../component/GameWaitingPage';
 import GameErrorPage    from '../../component/GameErrorPage';
+import GameCaptionPage  from '../../component/GameCaptionPage';
 import Loading          from '../../component/Loading';
+import PlannerBanner    from '../../component/PlayerBanner';
 
 // Redux.
 import { addUsername, removeUsername, setUsernameStatus } from "../../redux/actions/users";
@@ -19,6 +21,7 @@ import { removeFirstToSend } from  '../../redux/actions/messages';
 // How many players to actually start a match (aka 2).
 const numberOfPlayersRequired = 1; // 2;
 const secondsToDrawEachImage  = 10; // 90;
+const secondsToWriteCaptions  = 60;
 const totalDrawings           = 3; // How many pictures are they gonna draw.
 const bufferTime              = 5; // How many seconds buffer do we give each client.
 
@@ -51,7 +54,7 @@ class Game extends React.Component {
     username: "",
     lobbyCode: "",
 
-    phase: "preload", // "waiting", "drawing", "captions"
+    phase: "captions", // "preload", // "waiting", "drawing", "captions"
 
     connectedUsers: [
       {
@@ -80,6 +83,13 @@ class Game extends React.Component {
     
     if(!this.state.ready){
       return;
+    }
+
+    // If they run out of time force them to the next section.
+    if(this.state.currentTime !== Math.floor(Date.now() / 1000)){
+      this.setState({
+        currentTime: Math.floor(Date.now() / 1000)
+      });
     }
 
     // Send out the messages from our system.
@@ -128,14 +138,7 @@ class Game extends React.Component {
     }
 
     if(this.state.phase === "drawing"){
-      // If they run out of time force them to the next section.
-
-      if(this.state.currentTime !== Math.floor(Date.now() / 1000)){
-        this.setState({
-          currentTime: Math.floor(Date.now() / 1000)
-        });
-      }
-
+      
       // Update our seconds left.
       let secondsLeft = (this.state.startTimestamp + (secondsToDrawEachImage * this.state.drawingCount)) - this.state.currentTime;
       
@@ -157,6 +160,28 @@ class Game extends React.Component {
       }
     
       return
+    }
+
+    if(this.state.phase === "captions"){
+
+      // secondsToWriteCaptions
+
+      // Update our seconds left.
+      const base = (this.state.startTimestamp + (secondsToDrawEachImage * totalDrawings)) + secondsToWriteCaptions;
+      let secondsLeft = base - this.state.currentTime;
+      
+      // Force it to be at least 0.
+      if(secondsLeft < 0){
+        secondsLeft = 0;
+ 
+        // Go to the next drawing state.
+        // this.setState({ drawingCount: this.state.drawingCount + 1 })
+      }
+
+      // Only update if it's not the same.
+      if(this.state.secondsLeft !== secondsLeft){
+        this.setState({ secondsLeft: secondsLeft });
+      }
     }
   }
 
@@ -276,10 +301,13 @@ class Game extends React.Component {
               drawSubmit={()=>{ this.setState({ drawingCount: this.state.drawingCount + 1 }) }}
               totalDrawings={totalDrawings}
             />),
-          text: `Drawing Phase (${this.state.drawingCount} of ${totalDrawings})`
+          text: `Drawing Phase (${(this.state.drawingCount <= totalDrawings) ? this.state.drawingCount : totalDrawings} of ${totalDrawings})`
         };
 
-      case "captions": return { content: (<GameWaitingPage username={this.state.username} />), text: "Waiting for players to ready up"};
+      // (CSP-10): Generate the page for the user to write captions for art.
+      case "captions": return { content: (<GameCaptionPage secondsLeft={secondsToCountdown(this.state.secondsLeft)} />), text: "Write some captions"};
+
+      case "sync": return { content: (<div>sync</div>), text: "a" }
 
       // We had an error or lost internet access.
       case "disconnected": return { content: (<GameErrorPage />), text: "Error: Connecting to server" }
@@ -317,7 +345,7 @@ class Game extends React.Component {
     return (
       <div className="c-game">
         <div className="user-info">
-            your username "todo", etc
+          <PlannerBanner phase={this.state.phase} />
         </div>
         <Card className="game-content">
             <div className="banner">

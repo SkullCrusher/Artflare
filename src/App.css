@@ -149,6 +149,37 @@
 .c-waiting-page .button {
   margin-top: 30px; }
 
+.c-captions .title {
+  height: 60px; }
+  .c-captions .title .text {
+    margin-top: 30px;
+    font-size: 16px; }
+.c-captions .content {
+  margin-left: 25%;
+  width: 50%; }
+.c-captions .c-settings .c-submit {
+  margin-top: 20px;
+  float: right;
+  width: 100%; }
+  .c-captions .c-settings .c-submit .text {
+    font-weight: bold;
+    margin-bottom: 10px; }
+  .c-captions .c-settings .c-submit .submit button {
+    width: 120px; }
+
+.c-player-banner {
+  height: 30px;
+  line-height: 25px;
+  background: #1890ff; }
+  .c-player-banner div {
+    display: inline-block;
+    font-weight: bold;
+    font-size: 12px;
+    letter-spacing: 0.4px;
+    color: white; }
+  .c-player-banner .padding {
+    padding-left: 10px; }
+
 .c-App {
   height: 100%;
   width: 100%;
