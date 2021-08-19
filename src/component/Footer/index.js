@@ -6,7 +6,7 @@ class Footer extends React.Component {
   state = {};
 
   render(){
-    return (<div>Footer</div>)
+    return (<div></div>) // Removed for now.
   };
 }
 

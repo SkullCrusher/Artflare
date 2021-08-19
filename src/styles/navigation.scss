@@ -1,5 +1,34 @@
 
-
 .c-navigation {
     height: 80px;
+
+    .logo {
+        float: left;
+        margin-top: 10px;
+        font-weight: bold;
+        font-size: 30px;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+
+        a {
+            color: black;
+        }
+    }
+
+    .menu-items{
+        float: right;
+        
+        .item {
+            margin-top: 25px;
+            display: inline-block;
+            margin-right: 25px;
+
+            font-size: 14px;
+            letter-spacing: 0.4px;
+
+            &:last-child {
+                margin-right: 0px;
+            }
+        }
+    }
 }

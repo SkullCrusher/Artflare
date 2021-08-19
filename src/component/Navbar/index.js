@@ -8,9 +8,22 @@ class Navbar extends React.Component {
   render(){
     return (
       <div className="c-navigation">
-        <Link to="/">homepage</Link>
-        <Link to="/privacy">privacy</Link>
-        <Link to="/terms">terms</Link>
+        <div className="logo">
+          <Link to="/">
+            Owl Art
+          </Link>
+        </div>
+        <div className="menu-items">
+          <div className="item">
+            <Link to="/">Homepage</Link>
+          </div>
+          <div className="item">
+            <Link to="/privacy">Privacy</Link>
+          </div>
+          <div className="item">
+            <Link to="/terms">Terms and Conditions</Link>
+          </div>
+        </div>
       </div>
     )
   };
