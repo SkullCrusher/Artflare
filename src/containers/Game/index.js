@@ -1,18 +1,21 @@
 import React       from 'react';
 import { connect } from "react-redux";
 import { Card }    from 'antd';
+import crypto      from 'crypto';
 
 // Component.
 import GameDrawningPage from '../../component/GameDrawingPage';
 import GameWaitingPage  from '../../component/GameWaitingPage';
 import GameErrorPage    from '../../component/GameErrorPage';
 import GameCaptionPage  from '../../component/GameCaptionPage';
+import GameChoicePage   from '../../component/GameChoicePage';
 import Loading          from '../../component/Loading';
 import PlannerBanner    from '../../component/PlayerBanner';
 
 // Redux.
 import { addUsername, removeUsername, setUsernameStatus } from "../../redux/actions/users";
 import { removeFirstToSend } from  '../../redux/actions/messages';
+import { addArt, addCaption, addCombo } from '../../redux/actions/userMade';
 
 /*
   Configuration
@@ -21,9 +24,9 @@ import { removeFirstToSend } from  '../../redux/actions/messages';
 // How many players to actually start a match (aka 2).
 const numberOfPlayersRequired = 1; // 2;
 const secondsToDrawEachImage  = 10; // 90;
-const secondsToWriteCaptions  = 60;
+const secondsToWriteCaptions  = 10; // 60;
 const totalDrawings           = 3; // How many pictures are they gonna draw.
-const bufferTime              = 5; // How many seconds buffer do we give each client.
+const bufferTime              = 10; // How many seconds buffer do we give each client.
 
 const finishedDrawingText = "Good Job! We are waiting on the others now."
 const domain = "wss://art-name-wip.radiolaria.workers.dev/api/room/##room##/websocket"
@@ -33,6 +36,15 @@ const domain = "wss://art-name-wip.radiolaria.workers.dev/api/room/##room##/webs
 */
 function secondsToCountdown(arg){
   return `${Math.floor(arg / 60)}:${((arg % 60) >= 10) ? (arg % 60) : ("0" + arg % 60)}`
+}
+
+/*
+  hash the file.
+*/
+function hash(arg) {
+  let shasum = crypto.createHash('sha1')
+  shasum.update(arg)
+  return shasum.digest('hex');
 }
 
 class Game extends React.Component {
@@ -54,26 +66,7 @@ class Game extends React.Component {
     username: "",
     lobbyCode: "",
 
-    phase: "captions", // "preload", // "waiting", "drawing", "captions"
-
-    connectedUsers: [
-      {
-        username: "example",
-        state:    "ready",
-      }
-    ],
-    art: [
-      {
-        username: "example",
-        data: "data"
-      }
-    ],
-    captions: [
-      {
-        username: "example",
-        data: "some captions :("
-      }
-    ]
+    phase: "preload", // "preload", "waiting", "drawing", "captions", "sync", "choices", "sync", "voting", "winner"
   };
   /**
    * # loop
@@ -164,8 +157,6 @@ class Game extends React.Component {
 
     if(this.state.phase === "captions"){
 
-      // secondsToWriteCaptions
-
       // Update our seconds left.
       const base = (this.state.startTimestamp + (secondsToDrawEachImage * totalDrawings)) + secondsToWriteCaptions;
       let secondsLeft = base - this.state.currentTime;
@@ -175,7 +166,7 @@ class Game extends React.Component {
         secondsLeft = 0;
  
         // Go to the next drawing state.
-        // this.setState({ drawingCount: this.state.drawingCount + 1 })
+        this.setState({ phase: "sync" })
       }
 
       // Only update if it's not the same.
@@ -183,17 +174,73 @@ class Game extends React.Component {
         this.setState({ secondsLeft: secondsLeft });
       }
     }
+
+    if(this.state.phase === "sync"){
+      // Update our seconds left.
+      const base = (this.state.startTimestamp + (secondsToDrawEachImage * totalDrawings)) + bufferTime + secondsToWriteCaptions;
+     
+      if(this.state.currentTime > base){
+        this.setState({ phase: "choices" });
+      }
+    }
+
+    if(this.state.phase === "choices"){
+      
+    }
+
+    if(this.state.phase === "voting"){
+
+    }
   }
 
+  // example: {"name":"dddebig1","message":"","timestamp":1629332971906}
   handleMessage = (arg) => {
-    // console.log("[Message]: ", arg)
+    // console.log("[message]: ", arg)
 
     // We ignore any message that is before our ready state.
     if(!this.state.ready){
       return
     }
 
-    console.log("[Message]: ", arg)
+    // @@art@@
+    if(arg.message.includes("@@art@@")){
+      let cleanedMessage = arg.message.replace("@@art@@", "")
+
+      this.props.addArt({
+        username: arg.name,
+        art: cleanedMessage,
+        hash: hash(cleanedMessage),
+      })
+      return
+    }
+
+    // @@message@@
+    if(arg.message.includes("@@message@@")){
+      let cleanedMessage = arg.message.replace("@@message@@", "")
+
+      this.props.addCaption({
+        username: arg.name,
+        caption: cleanedMessage,
+        hash: hash(cleanedMessage),
+      })
+      return
+    }
+
+    if(arg.message.includes("@@combo@@")){
+      let cleanedMessage = arg.message.replace("@@combo@@", "").split("##")
+
+      if(cleanedMessage.length < 2){
+        return
+      }
+
+      this.props.addCombo({
+        username: arg.name,
+        art: cleanedMessage[0],
+        caption: cleanedMessage[1],
+        hash: hash(cleanedMessage[0] + "##" + cleanedMessage[1]),
+      })
+      return
+    }
 
     
   }
@@ -307,7 +354,14 @@ class Game extends React.Component {
       // (CSP-10): Generate the page for the user to write captions for art.
       case "captions": return { content: (<GameCaptionPage secondsLeft={secondsToCountdown(this.state.secondsLeft)} />), text: "Write some captions"};
 
-      case "sync": return { content: (<div>sync</div>), text: "a" }
+      // Make sure everyone is done syncing.
+      case "sync": return { content: (<Loading text={finishedDrawingText} />), text: "Waiting for players to catch up" }
+
+      // (CSP-30): Generate the page for the user to create a combo for voting.
+      case "choices": return { content: (<GameChoicePage />), text: "Create a combo!" }
+
+      // (CSP-9): Generate the page for voting.
+      case "voting": return { content: (<Loading text={finishedDrawingText} />), text: "Create a submission" }
 
       // We had an error or lost internet access.
       case "disconnected": return { content: (<GameErrorPage />), text: "Error: Connecting to server" }
@@ -339,7 +393,7 @@ class Game extends React.Component {
    * # render
    */
   render(){
-
+  
     const { content, text } = this.pageSelector();
 
     return (
@@ -368,4 +422,4 @@ const myStateToProps = (state) => {
   };
 };
 
-export default connect(myStateToProps, { addUsername, removeUsername, removeFirstToSend, setUsernameStatus })(Game);
+export default connect(myStateToProps, { addUsername, removeUsername, removeFirstToSend, setUsernameStatus, addArt, addCaption, addCombo })(Game);

@@ -1,7 +1,7 @@
 import React from 'react';
-
 import { connect } from "react-redux";
 import { Button, Input  } from 'antd';
+import CanvasDraw from "react-canvas-draw";
 
 import { addToSend } from '../../redux/actions/messages';
 
@@ -19,36 +19,20 @@ class GameDrawningPage extends React.Component {
    */
   submit = () => {
 
-    if(this.state.value.length < 4){
-        return
-    }
-
     this.setState({ submitting: true })
 
     // Send the data out to save it.
-    this.props.addToSend({ message: "@@message@@" + this.state.value })
+    this.props.addToSend({ message: this.state.value })
   
     setTimeout(()=>{
         this.setState({ value: "", submitting: false })
     }, 2500);
   }
 
-  onChange = (type) => {
-    return (e) => {
+  componentDidMount(){
 
-        // Limit the message size to 50 characters.
-        this.setState({
-            [type]: e.target.value.substring(0, 50)
-        })
-    }
   }
-  /**
-   * # componentDidUpdate
-   * Handle auto saving when the user runs out of time.
-   */
-  componentDidUpdate(prevProps, prevState){
 
-  };
   /**
    * # render
    */
@@ -62,13 +46,16 @@ class GameDrawningPage extends React.Component {
                 </div>
             </div>
             <div className="content">
-                <Input
-                    value={this.state.value}
-                    onChange={this.onChange("value")}
-                    placeholder="Party hard, plague hard"
-                />
+               
             </div>
             <div className="c-settings">
+
+                <CanvasDraw
+                    ref={canvasDraw => (this.saveableCanvas = canvasDraw)}
+                    brushColor={this.state.pencilDrawingColor}
+                    brushRadius={this.state.pencilBrushRadius}
+                    {...this.state}
+                />
 
                 <div className="c-submit">
                     <div className="submit">

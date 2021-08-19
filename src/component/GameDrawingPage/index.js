@@ -14,6 +14,7 @@ const colors = [
 
 const finishedDrawingText = "Good Job! We are waiting on the others now."
 
+
 class GameDrawningPage extends React.Component {
 
   state = {
@@ -52,7 +53,7 @@ class GameDrawningPage extends React.Component {
     let save = this.saveableCanvas.getSaveData()
 
     // Send the data out to save it.
-    this.props.addToSend({ message: save })
+    this.props.addToSend({ message: "@@art@@" + save })
     
     // Clear our current canvas so we can start again.
     this.saveableCanvas.clear()
