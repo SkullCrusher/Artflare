@@ -12,27 +12,46 @@ import Loading          from '../../component/Loading';
 import { addUsername, removeUsername, setUsernameStatus } from "../../redux/actions/users";
 import { removeFirstToSend } from  '../../redux/actions/messages';
 
+/*
+  Configuration
+*/
+
 // How many players to actually start a match (aka 2).
-const numberOfPlayersRequired = 2;
+const numberOfPlayersRequired = 1; // 2;
+const secondsToDrawEachImage  = 10; // 90;
+const totalDrawings           = 3; // How many pictures are they gonna draw.
+const bufferTime              = 5; // How many seconds buffer do we give each client.
 
 const finishedDrawingText = "Good Job! We are waiting on the others now."
 const domain = "wss://art-name-wip.radiolaria.workers.dev/api/room/##room##/websocket"
+
+/*
+  Helpers
+*/
+function secondsToCountdown(arg){
+  return `${Math.floor(arg / 60)}:${((arg % 60) >= 10) ? (arg % 60) : ("0" + arg % 60)}`
+}
 
 class Game extends React.Component {
 
   ws = null;
 
   state = {
-
     // If our websocket is ready.
     ready: false,
-
+    
+    // Help track timing for each.
+    currentTime:    0,
     startTimestamp: 0,
+    secondsLeft:    0,
+    
+    // Drawing variables.
+    drawingCount: 1, // (1 of 3)
 
     username: "",
     lobbyCode: "",
 
-    phase: "preload", // "waiting", "drawing",
+    phase: "preload", // "waiting", "drawing", "captions"
 
     connectedUsers: [
       {
@@ -53,7 +72,10 @@ class Game extends React.Component {
       }
     ]
   };
-
+  /**
+   * # loop
+   * Basically the game ticker to move things forward.
+   */
   loop = () => {
     
     if(!this.state.ready){
@@ -90,7 +112,7 @@ class Game extends React.Component {
           // Set us to drawing.
           this.setState({
             phase: "drawing",
-            startTimestamp: Math.floor(Date.now())
+            startTimestamp: Math.floor(Date.now() / 1000)
           });
 
           // Reset the ready status for all of the users to false.
@@ -102,10 +124,39 @@ class Game extends React.Component {
           }
         }
       }
+      return
     }
 
     if(this.state.phase === "drawing"){
+      // If they run out of time force them to the next section.
 
+      if(this.state.currentTime !== Math.floor(Date.now() / 1000)){
+        this.setState({
+          currentTime: Math.floor(Date.now() / 1000)
+        });
+      }
+
+      // Update our seconds left.
+      let secondsLeft = (this.state.startTimestamp + (secondsToDrawEachImage * this.state.drawingCount)) - this.state.currentTime;
+      
+      // Force it to be at least 0.
+      if(secondsLeft < 0){
+        secondsLeft = 0;
+
+        // Go to the next drawing state.
+        this.setState({ drawingCount: this.state.drawingCount + 1 })
+      }
+
+      if(this.state.drawingCount > (totalDrawings + 2)){
+        this.setState({ phase: "captions" });
+      }
+
+      // Only update if it's not the same.
+      if(this.state.secondsLeft !== secondsLeft){
+        this.setState({ secondsLeft: secondsLeft });
+      }
+    
+      return
     }
   }
 
@@ -216,7 +267,19 @@ class Game extends React.Component {
       case "waiting": return { content: (<GameWaitingPage username={this.state.username} />), text: "Waiting for players to ready up"};
 
       // (CSP-11): Generate the page for the user to draw on to make their art.
-      case "drawing": return { content: (<GameDrawningPage />), text: "Drawing Phase (1 of 3)"};
+      case "drawing": 
+        return {
+          content: (
+            <GameDrawningPage
+              drawingCount={this.state.drawingCount}
+              secondsLeft={secondsToCountdown(this.state.secondsLeft)}
+              drawSubmit={()=>{ this.setState({ drawingCount: this.state.drawingCount + 1 }) }}
+              totalDrawings={totalDrawings}
+            />),
+          text: `Drawing Phase (${this.state.drawingCount} of ${totalDrawings})`
+        };
+
+      case "captions": return { content: (<GameWaitingPage username={this.state.username} />), text: "Waiting for players to ready up"};
 
       // We had an error or lost internet access.
       case "disconnected": return { content: (<GameErrorPage />), text: "Error: Connecting to server" }
