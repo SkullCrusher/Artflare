@@ -2,10 +2,18 @@ import React       from 'react';
 import { connect } from "react-redux";
 import { Card }    from 'antd';
 
+// Component.
 import GameDrawningPage from '../../component/GameDrawingPage';
 import GameWaitingPage  from '../../component/GameWaitingPage';
 import GameErrorPage    from '../../component/GameErrorPage';
 import Loading          from '../../component/Loading';
+
+// Redux.
+import { addUsername, removeUsername, setUsernameStatus } from "../../redux/actions/users";
+import { removeFirstToSend } from  '../../redux/actions/messages';
+
+// How many players to actually start a match (aka 2).
+const numberOfPlayersRequired = 2;
 
 const finishedDrawingText = "Good Job! We are waiting on the others now."
 const domain = "wss://art-name-wip.radiolaria.workers.dev/api/room/##room##/websocket"
@@ -15,6 +23,12 @@ class Game extends React.Component {
   ws = null;
 
   state = {
+
+    // If our websocket is ready.
+    ready: false,
+
+    startTimestamp: 0,
+
     username: "",
     lobbyCode: "",
 
@@ -40,6 +54,73 @@ class Game extends React.Component {
     ]
   };
 
+  loop = () => {
+    
+    if(!this.state.ready){
+      return;
+    }
+
+    // Send out the messages from our system.
+    if(this.props.toSend.length > 0){
+
+      // Send the message.
+      this.ws.send(JSON.stringify(this.props.toSend[0]));
+
+      // Remove the message we just sent.
+      this.props.removeFirstToSend();      
+    }
+
+    // If we are waiting for players and everyone is ready, start.
+    if(this.state.phase === "waiting"){
+
+      const total = this.props.users.length;
+
+      // Don't check unless we have enough users to play.
+      if(total >= numberOfPlayersRequired){             
+        let readyCount = 0;
+
+        for(let i = 0; i < this.props.users.length; i += 1){
+
+          if(this.props.users[i].ready){
+            readyCount += 1;
+          }
+        }
+
+        if(total === readyCount){
+          // Set us to drawing.
+          this.setState({
+            phase: "drawing",
+            startTimestamp: Math.floor(Date.now())
+          });
+
+          // Reset the ready status for all of the users to false.
+          for(let i = 0; i < this.props.users.length; i += 1){
+            this.props.setUsernameStatus({
+              username: this.props.users[i].username,
+              newState: false,
+            });
+          }
+        }
+      }
+    }
+
+    if(this.state.phase === "drawing"){
+
+    }
+  }
+
+  handleMessage = (arg) => {
+    // console.log("[Message]: ", arg)
+
+    // We ignore any message that is before our ready state.
+    if(!this.state.ready){
+      return
+    }
+
+    console.log("[Message]: ", arg)
+
+    
+  }
   /**
    * # connectToLobby
    */
@@ -53,43 +134,47 @@ class Game extends React.Component {
     this.ws.onopen = () => {
       console.log('[debug]: Connected.')
 
-      this.ws.send(JSON.stringify({ name: this.state.username}))
+      // Send the cloudflare worker our username.
+      this.ws.send(JSON.stringify({ name: this.state.username }))
 
+      // Set our interal state to waiting for the game to start.
       this.setState({ phase: "waiting" });
-
-
-    }
+    };
 
     this.ws.onmessage = evt => {
-        // listen to data sent from the websocket server
-        // const message = JSON.parse(evt.data)
-        // this.setState({dataFromServer: message})
-        console.log(evt.data)
+      let parsed = JSON.parse(evt.data);
 
-        /*
-        let a = JSON.parse(evt.data);
+      // Handle us being ready. Example: {"ready":true}
+      if(parsed.ready !== undefined){
+        console.log("[debug]: System Ready")
+        this.setState({ ready: true });
+        return
+      }
 
-        this.setState({
-          debug: a.message
-        });
-        */
-    }
+      // Handle user joinned message (also called at first load). Example: {"joined":"dddebig1"}
+      if(parsed.joined !== undefined){
+        this.props.addUsername({ username: parsed.joined, ready: false });
+        return
+      }
+
+      // Handle messages (all the data transfer). Example: {"name":"dddebig1","message":"","timestamp":1629332971906}
+      if(parsed.message !== undefined){
+        this.handleMessage(parsed);
+        return
+      }
+    };
 
     // If our websocket closes, don't even try to reconnect because they will be behind on sync.
     this.ws.onclose = () => {
       console.log('[error]: Disconnected.')
       this.setState({ phase: "disconnected" });
-    }
+    };
   };
 
   // Resets the store so we can use it again.
   reset = () => {
-    
-  }
-
-
-
-
+    // TODO.
+  };
   /**
    * # generateCaption
    * (CSP-10): Generate the page for the user to enter captions for the art.
@@ -120,19 +205,20 @@ class Game extends React.Component {
 
   pageSelector = () => {
 
-    if(false){
-        return <Loading text={finishedDrawingText} />
-    }
-
+    // return <Loading text={finishedDrawingText} />
+    
     switch(this.state.phase){
 
+      // Waiting for the websocket connection.
       case "preload": return { content: (<Loading text="Waiting for connection" />), text: "Connecting to lobby"};
 
-      case "waiting": return { content: (<GameWaitingPage />), text: "Waiting for players to ready up"};
+      // Waiting for the match to start.
+      case "waiting": return { content: (<GameWaitingPage username={this.state.username} />), text: "Waiting for players to ready up"};
 
       // (CSP-11): Generate the page for the user to draw on to make their art.
       case "drawing": return { content: (<GameDrawningPage />), text: "Drawing Phase (1 of 3)"};
 
+      // We had an error or lost internet access.
       case "disconnected": return { content: (<GameErrorPage />), text: "Error: Connecting to server" }
     }
     
@@ -149,6 +235,13 @@ class Game extends React.Component {
     if(username !== ""){ this.setState({ username: username }) }
     
     setTimeout(this.connectToLobby, 1);
+
+    // Start up a timer.
+    this.timer = setInterval(this.loop, 250);
+  }
+
+  componentWillUnmount(){
+    clearInterval(this.timer);
   }
 
   /**
@@ -176,10 +269,12 @@ class Game extends React.Component {
 
 
 const myStateToProps = (state) => {
-
   console.log("state", state)
 
-  return {};
+  return {
+    toSend: state.messagesReducer.list,
+    users:  state.usersReducer.users,
+  };
 };
 
-export default connect(myStateToProps, {  })(Game);
+export default connect(myStateToProps, { addUsername, removeUsername, removeFirstToSend, setUsernameStatus })(Game);

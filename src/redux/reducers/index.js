@@ -5,11 +5,13 @@
 import { combineReducers } from "redux";
 
 // import reducers
-// import activePlansReducer  from "./activePlans";
+import messagesReducer from "./messages";
+import usersReducer    from "./users";
 
 // set constants
 const ENTRY_REDUCER = combineReducers({
-    // activePlansReducer,
+    messagesReducer,
+    usersReducer,
 });
 
 // export the reducer

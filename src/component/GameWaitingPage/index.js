@@ -1,21 +1,44 @@
-import React from 'react';
+import React       from 'react';
+import { connect } from "react-redux";
+import { Button }  from 'antd';
 
-import { Button } from 'antd';
+import { setUsernameStatus } from '../../redux/actions/users';
+import { addToSend } from '../../redux/actions/messages';
+
 
 class GameWaitingPage extends React.Component {
 
   state = {
     currentState: "not-ready"
   };
+  /**
+   * # loop
+   * Just keep resending it until we unmount (for new people).
+   */
+  loop = () => {
+    if(this.state.currentState === "not-ready"){
+        return;
+    }
 
+    this.props.addToSend({ message: "@@ready@@" })
+  }
+  /**
+   * # handleClick
+   */
   handleClick = () => {
-    
     // Send the message out to the others that we are ready.
+    this.setState({ currentState: "ready" })
 
+    this.props.setUsernameStatus({ username: this.props.username, newState: true })
+    this.props.addToSend({ message: "@@ready@@" })
+  }
 
-    this.setState({
-        currentState: "ready"
-    })
+  componentDidMount(){
+    this.timer = setInterval(this.loop, 2500);
+  }
+
+  componentWillUnmount(){
+    clearInterval(this.timer);
   }
 
   /**
@@ -47,4 +70,8 @@ class GameWaitingPage extends React.Component {
   };
 }
 
-export default GameWaitingPage;
+const myStateToProps = (state) => {
+    return {};
+};
+  
+export default connect(myStateToProps, { setUsernameStatus, addToSend })(GameWaitingPage);
