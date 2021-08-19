@@ -8,6 +8,8 @@
 .c-legal .content {
   padding-top: 30px; }
   .c-legal .content p {
+    margin-left: calc(50% - 250px);
+    max-width: 500px;
     line-height: 25px;
     letter-spacing: 0.4px; }
 .c-legal .go-back {
