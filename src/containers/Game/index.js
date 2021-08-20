@@ -30,20 +30,21 @@ const numberOfPlayersRequired = 1;  // 2;
 const secondsToDrawEachImage  = 10; // 90;
 const secondsToWriteCaptions  = 10; // 60;
 const secondsToChoose         = 20; //
-const secondsToVote           = 30; //
+const secondsToVote           = 20; //
 
 // Base time calc.
-const captionStart     = (secondsToDrawEachImage * totalDrawings) + secondsToWriteCaptions;
-const syncStart        = captionStart + bufferTime;
-const choicesStart     = syncStart + secondsToChoose;
-const choicesWaitStart = choicesStart + bufferTime;
-const voteTimeStart    = choicesWaitStart + secondsToVote;
+const captionStart         = (secondsToDrawEachImage * totalDrawings) + secondsToWriteCaptions;
+const syncStart            = captionStart + bufferTime;
+const choicesStart         = syncStart + secondsToChoose;
+const choicesWaitStart     = choicesStart + bufferTime;
+const voteTimeStart        = choicesWaitStart + secondsToVote;
+const voteWaitingTimeStart = voteTimeStart + bufferTime;
 
 const finishedDrawingText = "Good Job! We are waiting on the others now."
 const domain = "wss://art-name-wip.radiolaria.workers.dev/api/room/##room##/websocket"
 
 // Block automatic redirecting to waiting.
-const blockRedirect = true
+const blockRedirect = false
 
 /*
   Helpers
@@ -80,7 +81,7 @@ class Game extends React.Component {
     drawingCount: 1,
 
     // "preload", "waiting", "drawing", "captions", "sync", "choices", "waiting-for-choices", "voting", "winner"
-    phase: "voting", // "preload",
+    phase: "preload",
   };
   /**
    * # loop
@@ -248,10 +249,34 @@ class Game extends React.Component {
     }
 
     if(this.state.phase === "voting"){
-      console.log("voting")
-      /*
+
       // Update our seconds left.
       const base = this.state.startTimestamp + voteTimeStart;
+
+      if(this.state.currentTime > base){
+        this.setState({ phase: "waiting-for-votes" });
+      }
+
+      let secondsLeft = base - this.state.currentTime;
+
+      // Force it to be at least 0.
+      if(secondsLeft < 0){
+        secondsLeft = 0;
+
+        // Go to the next drawing state.
+        this.setState({ phase: "waiting-for-votes" })
+      }
+
+      // Only update if it's not the same.
+      if(this.state.secondsLeft !== secondsLeft){
+        this.setState({ secondsLeft: secondsLeft });
+      }
+      
+    }
+
+    if(this.state.phase === "waiting-for-votes"){
+      // Update our seconds left.
+      const base = this.state.startTimestamp + voteWaitingTimeStart;
 
       if(this.state.currentTime > base){
         this.setState({ phase: "winning" });
@@ -271,7 +296,6 @@ class Game extends React.Component {
       if(this.state.secondsLeft !== secondsLeft){
         this.setState({ secondsLeft: secondsLeft });
       }
-      */
     }
 
     if(this.state.phase === "winning"){
@@ -440,7 +464,7 @@ class Game extends React.Component {
       case "sync": return { content: (<Loading text={finishedDrawingText} />), text: "Waiting for players to catch up" }
 
       // (CSP-30): Generate the page for the user to create a combo for voting.
-      case "choices": return { content: (<GameChoicePage done={()=>{ this.setState({ phase: "waiting-for-choices" }) }} />), text: "Create a combo!" }
+      case "choices": return { content: (<GameChoicePage secondsLeft={secondsToCountdown(this.state.secondsLeft)} done={()=>{ this.setState({ phase: "waiting-for-choices" }) }} />), text: "Create a combo!" }
 
       // Make sure everyone is done picking.
       case "waiting-for-choices": return { content: (<Loading text={finishedDrawingText} secondsLeft={secondsToCountdown(this.state.secondsLeft)} />), text: "Waiting for players to catch up" }
@@ -457,7 +481,7 @@ class Game extends React.Component {
       }
 
       // Wait for the users to finish voting.
-      case "waiting-for-votes": return { content: (<Loading text="todo" secondsLeft={secondsToCountdown(this.state.secondsLeft)} />), text: "Waiting for players to catch up" }
+      case "waiting-for-votes": return { content: (<Loading text={finishedDrawingText} secondsLeft={secondsToCountdown(this.state.secondsLeft)} />), text: "Waiting for players to catch up" }
 
       // (CSP-12): Winner phase for the gamemode.
       case "winning": return { content: (<Loading text={finishedDrawingText} />), text: "Winning" }
