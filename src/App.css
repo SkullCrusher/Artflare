@@ -209,6 +209,46 @@
   .c-player-banner .padding {
     padding-left: 10px; }
 
+.c-choices .title .text {
+  margin-top: 20px;
+  margin-bottom: 20px; }
+.c-choices .content .item {
+  display: inline-block; }
+  .c-choices .content .item div {
+    margin-left: 20px;
+    border-style: solid;
+    border-width: 2px;
+    border-color: black; }
+    .c-choices .content .item div:first {
+      margin-left: 0px; }
+.c-choices .content .selected div {
+  border-color: #1890ff !important; }
+.c-choices .content-captions {
+  width: 50%;
+  margin-left: calc(25%); }
+  .c-choices .content-captions .title {
+    font-weight: bold;
+    font-size: 18px;
+    margin-top: 15px; }
+  .c-choices .content-captions .item {
+    margin-left: 10%;
+    width: 100%; }
+    .c-choices .content-captions .item label {
+      width: 100%;
+      padding-top: 15px;
+      float: left;
+      letter-spacing: 1.0px;
+      font-size: 12px; }
+.c-choices .c-settings .c-submit {
+  margin-top: 20px;
+  float: right;
+  width: 100%; }
+  .c-choices .c-settings .c-submit .text {
+    font-weight: bold;
+    margin-bottom: 10px; }
+  .c-choices .c-settings .c-submit .submit button {
+    width: 120px; }
+
 .c-App {
   height: 100%;
   width: 100%;

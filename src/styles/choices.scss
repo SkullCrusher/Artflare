@@ -1,0 +1,78 @@
+
+.c-choices {
+    .title {
+        .text {
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+    }
+
+    .content {
+        .item{
+            display: inline-block;
+
+            div {
+                margin-left: 20px;
+                border-style: solid;
+                border-width: 2px;
+                border-color: black;
+
+                &:first {
+                    margin-left: 0px;
+                }
+            }
+        }
+
+        .selected {
+            div {
+                border-color: #1890ff !important;
+            }
+        }
+    }
+
+    .content-captions {
+        width: 50%;
+        margin-left: calc(25%);
+
+        .title {
+            font-weight: bold;
+            font-size: 18px;
+            margin-top: 15px;
+        }
+
+        .item {
+            margin-left: 10%;   
+            width: 100%;
+
+            label {
+                width: 100%;
+                padding-top: 15px;
+                float: left;
+                letter-spacing: 1.0px;
+                font-size: 12px;
+            }
+
+            
+        }
+    }
+
+    .c-settings {
+
+        .c-submit {
+            margin-top: 20px;
+            float: right;
+            width: 100%;
+
+            .text {
+                font-weight: bold;
+                margin-bottom: 10px;
+            }
+
+            .submit {
+                button {
+                    width: 120px;
+                }
+            }
+        }
+    }
+}
