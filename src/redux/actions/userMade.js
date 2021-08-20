@@ -15,3 +15,8 @@ export const addCombo = payload => ({
     "type": types.ADD_COMBO,
     payload
 });
+
+export const addVote = payload => ({
+    "type": types.ADD_VOTE,
+    payload
+});

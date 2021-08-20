@@ -1,69 +1,121 @@
 import React       from 'react';
 import { connect } from "react-redux";
 import { Button }  from 'antd';
+import CanvasDraw  from "react-canvas-draw";
 
 import { setUsernameStatus } from '../../redux/actions/users';
 import { addToSend } from '../../redux/actions/messages';
 
 
-class GameWaitingPage extends React.Component {
+class GameVotingPage extends React.Component {
 
   state = {
-    currentState: "not-ready"
-  };
-  /**
-   * # loop
-   * Just keep resending it until we unmount (for new people).
-   */
-  loop = () => {
-    if(this.state.currentState === "not-ready"){
-        return;
-    }
+    selectedIndex: 0,
 
-    this.props.addToSend({ message: "@@ready@@" })
-  }
+    // Drawable stuff.
+    loadTimeOffset: 5,
+    lazyRadius: 0,
+    // brushRadius: 6,
+    // brushColor: "#000",
+    catenaryColor: "#f4f8fe", // "#0a0302",
+    gridColor: "rgba(150,150,150,0.17)",
+    hideGrid: true, // false,
+    canvasWidth: 250, // 375,
+    canvasHeight: 250, // 375,
+    disabled: true,
+    imgSrc: "",
+    saveData: null,
+    immediateLoading: false,
+    hideInterface: false
+  };
   /**
    * # handleClick
    */
-  handleClick = () => {
-    // Send the message out to the others that we are ready.
-    this.setState({ currentState: "ready" })
+  handleSubmit = () => {
 
-    this.props.setUsernameStatus({ username: this.props.username, newState: true })
-    this.props.addToSend({ message: "@@ready@@" })
+    let payload = {
+      voter:   this.props.username,
+      art:     this.props.combos[this.state.selectedIndex].art,
+      caption: this.props.combos[this.state.selectedIndex].caption
+    }
+
+    // Send our vote.
+    this.props.addToSend({ message: "@@addVote@@" + JSON.stringify(payload) })
+
+    // We are done with voting.
+    this.props.done();
   }
+  /**
+   * # handleMove
+   * Handle swapping.
+   * 
+   * @param {int} amount 
+   * 
+   * @return markup
+   */
+  handleMove = (amount) => {
 
+    let newAdjusted = this.state.selectedIndex + amount;
+
+    if(newAdjusted < 0){
+      newAdjusted = 0;
+    }
+
+    if(newAdjusted >= this.props.combos.length){
+      newAdjusted = 0;
+    }
+
+    this.setState({ selectedIndex: newAdjusted });
+
+    // Update our canvas (if the index exists).
+    if(this.props.combos[newAdjusted] !== undefined){
+      this.currentCanvas.loadSaveData(this.props.combos[newAdjusted].art.art, true)
+    }
+  };
+  /**
+   * # componentDidMount
+   * Load the default combination.
+   */  
   componentDidMount(){
-    this.timer = setInterval(this.loop, 2500);
+    setTimeout(()=>{
+      this.handleMove(0);
+    }, 250);
   }
-
-  componentWillUnmount(){
-    clearInterval(this.timer);
-  }
-
   /**
    * # render
    */
   render(){
     return (
-        <div className="c-waiting-page">
+        <div className="c-voting-page">
             <div className="title">
                 <div className="text">
-                    Game is waiting for everyone to ready up. Click Ready when you are :)
-                </div>
-                <div className="sub-text">
-                    If the others are mid game you will need to wait for them to finish
+                  Pick your favorite! You are currently looking at <b>{this.state.selectedIndex + 1} of {this.props.combos.length}</b>. Quickly you have <b>{this.props.secondsLeft}</b> left
                 </div>
             </div>
+            <div className="content">
+              <div className="combo">
+                <div className="art">
+                  <CanvasDraw
+                    onClick={()=>{}}
+                    ref={canvasDraw => (this.currentCanvas = canvasDraw)}
+                    {...this.state}
+                  />
+                </div>
+                <div className="caption">
+                  {this.props.combos[this.state.selectedIndex].caption.caption}
+                </div>
+              </div>
+            </div>
             <div className="button">
-                <Button
-                    type="primary"
-                    size="large"
-                    onClick={this.handleClick}
-                    disabled={(this.state.currentState === "ready")}
-                >
-                    {(this.state.currentState === "not-ready") ? "Ready" : "Waiting"}
-                </Button>
+              <div className="back">
+                <Button type="primary" size="large" onClick={()=>{ this.handleMove(-1) }}>Back</Button>
+              </div>
+              <div>
+                <Button type="primary" size="large" onClick={this.handleSubmit} danger> Submit</Button>
+              </div>
+              <div className="next">
+                <Button type="primary" size="large" onClick={()=>{ this.handleMove(1) }}>Next</Button>
+              </div>
             </div>
         </div>
     )
@@ -71,7 +123,9 @@ class GameWaitingPage extends React.Component {
 }
 
 const myStateToProps = (state) => {
-    return {};
+    return {
+      combos: state.userMadeReducer.combos,
+    };
 };
   
-export default connect(myStateToProps, { setUsernameStatus, addToSend })(GameWaitingPage);
+export default connect(myStateToProps, { setUsernameStatus, addToSend })(GameVotingPage);

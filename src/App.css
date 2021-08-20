@@ -263,6 +263,37 @@
 .c-why .go-back {
   margin-top: 20px; }
 
+.c-voting-page .title {
+  margin-top: 30px; }
+  .c-voting-page .title .text {
+    font-size: 12px; }
+.c-voting-page .content {
+  margin-top: 15px; }
+  .c-voting-page .content .combo .art {
+    margin-left: calc(50% - 127.5px);
+    width: 255px;
+    border-style: solid;
+    border-width: 2px;
+    border-color: black; }
+  .c-voting-page .content .combo .caption {
+    margin-top: 10px;
+    font-weight: bold; }
+  .c-voting-page .content .controls .back {
+    display: inline-block; }
+  .c-voting-page .content .controls .next {
+    display: inline-block;
+    margin-left: 10px; }
+.c-voting-page .button {
+  margin-top: 30px; }
+  .c-voting-page .button .back {
+    margin-right: 15px; }
+  .c-voting-page .button .next {
+    margin-left: 15px; }
+  .c-voting-page .button div {
+    display: inline-block; }
+    .c-voting-page .button div button {
+      width: 120px; }
+
 .c-App {
   height: 100%;
   width: 100%;

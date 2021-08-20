@@ -9,13 +9,14 @@ import GameWaitingPage  from '../../component/GameWaitingPage';
 import GameErrorPage    from '../../component/GameErrorPage';
 import GameCaptionPage  from '../../component/GameCaptionPage';
 import GameChoicePage   from '../../component/GameChoicePage';
+import GameVotingPage   from '../../component/GameVotingPage';
 import Loading          from '../../component/Loading';
 import PlannerBanner    from '../../component/PlayerBanner';
 
 // Redux.
 import { addUsername, removeUsername, setUsernameStatus } from "../../redux/actions/users";
 import { removeFirstToSend } from  '../../redux/actions/messages';
-import { addArt, addCaption, addCombo } from '../../redux/actions/userMade';
+import { addArt, addCaption, addCombo, addVote } from '../../redux/actions/userMade';
 
 /*
   Configuration
@@ -38,10 +39,11 @@ const choicesStart     = syncStart + secondsToChoose;
 const choicesWaitStart = choicesStart + bufferTime;
 const voteTimeStart    = choicesWaitStart + secondsToVote;
 
-
-
 const finishedDrawingText = "Good Job! We are waiting on the others now."
 const domain = "wss://art-name-wip.radiolaria.workers.dev/api/room/##room##/websocket"
+
+// Block automatic redirecting to waiting.
+const blockRedirect = true
 
 /*
   Helpers
@@ -50,9 +52,7 @@ function secondsToCountdown(arg){
   return `${Math.floor(arg / 60)}:${((arg % 60) >= 10) ? (arg % 60) : ("0" + arg % 60)}`
 }
 
-/*
-  hash the file.
-*/
+// hash the file.
 function hash(arg) {
   let shasum = crypto.createHash('sha1')
   shasum.update(arg)
@@ -67,18 +67,20 @@ class Game extends React.Component {
     // If our websocket is ready.
     ready: false,
 
+    // Lobby settings.
+    username: "",
+    lobbyCode: "",
+
     // Help track timing for each.
     currentTime:    0,
     startTimestamp: 0,
     secondsLeft:    0,
 
     // Drawing variables.
-    drawingCount: 1, // (1 of 3)
+    drawingCount: 1,
 
-    username: "",
-    lobbyCode: "",
-
-    phase: "preload", // "preload", "waiting", "drawing", "captions", "sync", "choices", "waiting-for-choices", "voting", "winner"
+    // "preload", "waiting", "drawing", "captions", "sync", "choices", "waiting-for-choices", "voting", "winner"
+    phase: "voting", // "preload",
   };
   /**
    * # loop
@@ -246,6 +248,8 @@ class Game extends React.Component {
     }
 
     if(this.state.phase === "voting"){
+      console.log("voting")
+      /*
       // Update our seconds left.
       const base = this.state.startTimestamp + voteTimeStart;
 
@@ -267,6 +271,7 @@ class Game extends React.Component {
       if(this.state.secondsLeft !== secondsLeft){
         this.setState({ secondsLeft: secondsLeft });
       }
+      */
     }
 
     if(this.state.phase === "winning"){
@@ -307,6 +312,7 @@ class Game extends React.Component {
       return
     }
 
+    // @@combo@@
     if(arg.message.includes("@@combo@@")){
       let cleanedMessage = arg.message.replace("@@combo@@", "").split("##")
 
@@ -320,6 +326,23 @@ class Game extends React.Component {
         caption: cleanedMessage[1],
         hash: hash(cleanedMessage[0] + "##" + cleanedMessage[1]),
       })
+      return
+    }
+
+    // @@addVote@@
+    if(arg.message.includes("@@addVote@@")){
+
+      let cleanedMessage = arg.message.replace("@@addVote@@", "")
+
+      if(cleanedMessage.length < 2){
+        return
+      }
+
+      try{
+        let tmp = JSON.parse(cleanedMessage);
+        this.props.addVote(tmp)
+      }catch(e){}
+
       return
     }
 
@@ -342,7 +365,9 @@ class Game extends React.Component {
       this.ws.send(JSON.stringify({ name: this.state.username }))
 
       // Set our interal state to waiting for the game to start.
-      this.setState({ phase: "waiting" });
+      if(!blockRedirect){
+        this.setState({ phase: "waiting" });
+      }
     };
 
     this.ws.onmessage = evt => {
@@ -380,33 +405,11 @@ class Game extends React.Component {
     // TODO.
   };
   /**
-   * # generateCaption
-   * (CSP-10): Generate the page for the user to enter captions for the art.
+   * # pageSelector
+   * Generate the page.
    * 
-   * return {markup}
+   * @returns {markup}
    */
-  generateCaption = () => {
-    return (<div>todo</div>)
-  };
-  /**
-   * # generateVoting
-   * (CSP-9): Generate the page for the users to vote on the art.
-   * 
-   * return {markup}
-   */
-  generateVoting = () => {
-    return (<div>todo</div>)
-  };
-  /**
-   * # generateWinner
-   * (CSP-12): Generate the page for showing who won.
-   * 
-   * return {markup}
-   */
-  generateWinner = () => {
-    return (<div>todo</div>)
-  };
-
   pageSelector = () => {
 
     switch(this.state.phase){
@@ -443,7 +446,18 @@ class Game extends React.Component {
       case "waiting-for-choices": return { content: (<Loading text={finishedDrawingText} secondsLeft={secondsToCountdown(this.state.secondsLeft)} />), text: "Waiting for players to catch up" }
 
       // (CSP-9): Generate the page for voting.
-      case "voting": return { content: (<Loading text={finishedDrawingText} />), text: "Voting" }
+      case "voting": return {
+        content: (
+          <GameVotingPage
+            done={()=>{ this.setState({ phase: "waiting-for-votes" }) }}
+            username={this.state.username}
+            secondsLeft={secondsToCountdown(this.state.secondsLeft)}
+          />),
+        text: "Vote for your favorite"
+      }
+
+      // Wait for the users to finish voting.
+      case "waiting-for-votes": return { content: (<Loading text="todo" secondsLeft={secondsToCountdown(this.state.secondsLeft)} />), text: "Waiting for players to catch up" }
 
       // (CSP-12): Winner phase for the gamemode.
       case "winning": return { content: (<Loading text={finishedDrawingText} />), text: "Winning" }
@@ -499,12 +513,10 @@ class Game extends React.Component {
 
 
 const myStateToProps = (state) => {
-  console.log("state", state)
-
   return {
     toSend: state.messagesReducer.list,
     users:  state.usersReducer.users,
   };
 };
 
-export default connect(myStateToProps, { addUsername, removeUsername, removeFirstToSend, setUsernameStatus, addArt, addCaption, addCombo })(Game);
+export default connect(myStateToProps, { addUsername, removeUsername, removeFirstToSend, setUsernameStatus, addVote, addArt, addCaption, addCombo })(Game);

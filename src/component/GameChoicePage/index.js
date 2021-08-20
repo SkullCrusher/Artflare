@@ -86,7 +86,9 @@ class GameDrawningPage extends React.Component {
     this.setState({ submitting: true })
 
     let payload = "@@combo@@" + JSON.stringify({ 
-        art: this.state.artList[this.state.selectedArt - 1], caption: this.state.captionList[this.state.selectedCaption] })
+        art: this.state.artList[this.state.selectedArt - 1],
+        caption: this.state.captionList[this.state.selectedCaption]
+    })
 
     // Send the data out to save it.
     this.props.addToSend({ message: payload })

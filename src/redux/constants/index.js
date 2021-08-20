@@ -17,6 +17,7 @@ const types = {
     "ADD_ART":             "ADD_ART",
     "ADD_CAPTION":         "ADD_CAPTION",
     "ADD_COMBO":           "ADD_COMBO",
+    "ADD_VOTE":            "ADD_VOTE",
     
 };
 
