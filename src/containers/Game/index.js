@@ -22,10 +22,11 @@ import { addArt, addCaption, addCombo } from '../../redux/actions/userMade';
 */
 
 // How many players to actually start a match (aka 2).
-const numberOfPlayersRequired = 1; // 2;
+const numberOfPlayersRequired = 1;  // 2;
 const secondsToDrawEachImage  = 10; // 90;
 const secondsToWriteCaptions  = 10; // 60;
-const totalDrawings           = 3; // How many pictures are they gonna draw.
+const secondsToChoose         = 20; //
+const totalDrawings           = 3;  // How many pictures are they gonna draw.
 const bufferTime              = 10; // How many seconds buffer do we give each client.
 
 const finishedDrawingText = "Good Job! We are waiting on the others now."
@@ -66,7 +67,7 @@ class Game extends React.Component {
     username: "",
     lobbyCode: "",
 
-    phase: "preload", // "preload", "waiting", "drawing", "captions", "sync", "choices", "sync", "voting", "winner"
+    phase: "preload", // "preload", "waiting", "drawing", "captions", "sync", "choices", "waiting-for-choices", "voting", "winner"
   };
   /**
    * # loop
@@ -186,6 +187,32 @@ class Game extends React.Component {
 
     if(this.state.phase === "choices"){
       
+
+       // Update our seconds left.
+       const base = (this.state.startTimestamp + (secondsToDrawEachImage * totalDrawings)) + bufferTime + secondsToWriteCaptions + secondsToChoose;
+     
+       if(this.state.currentTime > base){
+         this.setState({ phase: "waiting-for-choices" });
+       }
+
+       let secondsLeft = base - this.state.currentTime;
+      
+        // Force it to be at least 0.
+        if(secondsLeft < 0){
+          secondsLeft = 0;
+  
+          // Go to the next drawing state.
+          this.setState({ phase: "sync" })
+        }
+
+        // Only update if it's not the same.
+        if(this.state.secondsLeft !== secondsLeft){
+          this.setState({ secondsLeft: secondsLeft });
+        }
+    }
+
+    if(this.state.phase === "waiting-for-choices"){
+
     }
 
     if(this.state.phase === "voting"){
@@ -358,7 +385,10 @@ class Game extends React.Component {
       case "sync": return { content: (<Loading text={finishedDrawingText} />), text: "Waiting for players to catch up" }
 
       // (CSP-30): Generate the page for the user to create a combo for voting.
-      case "choices": return { content: (<GameChoicePage />), text: "Create a combo!" }
+      case "choices": return { content: (<GameChoicePage done={()=>{ this.setState({ phase: "waiting-for-choices" }) }} />), text: "Create a combo!" }
+
+      // Make sure everyone is done picking.
+      case "waiting-for-choices": return { content: (<Loading text={finishedDrawingText} secondsLeft={secondsToCountdown(this.state.secondsLeft)} />), text: "Waiting for players to catch up" }
 
       // (CSP-9): Generate the page for voting.
       case "voting": return { content: (<Loading text={finishedDrawingText} />), text: "Create a submission" }
