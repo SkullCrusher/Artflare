@@ -10,7 +10,7 @@ class Navbar extends React.Component {
       <div className="c-navigation">
         <div className="logo">
           <Link to="/">
-            Owl Art
+            ArtFlare
           </Link>
         </div>
         <div className="menu-items">

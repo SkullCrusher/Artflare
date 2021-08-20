@@ -170,8 +170,7 @@ class Game extends React.Component {
     if(this.state.phase === "captions"){
 
       // Update our seconds left.
-      const base = this.state.startTimestamp + captionStart;
-      let secondsLeft = base - this.state.currentTime;
+      let secondsLeft = (this.state.startTimestamp + captionStart) - this.state.currentTime;
 
       // Force it to be at least 0.
       if(secondsLeft < 0){
