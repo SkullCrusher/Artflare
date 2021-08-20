@@ -1,87 +1,112 @@
 .c-error-page .title {
   margin-top: 20px;
   font-weight: bold;
-  font-size: 24px; }
+  font-size: 24px;
+}
 .c-error-page .sarcastic-text {
   margin-top: 10px;
-  letter-spacing: 0.4px; }
+  letter-spacing: 0.4px;
+}
 .c-error-page .self-help-video {
-  margin-top: 30px; }
+  margin-top: 30px;
+}
 .c-error-page .go-back {
-  margin-top: 20px; }
+  margin-top: 20px;
+}
 
 .c-legal .title {
   font-size: 40px;
-  font-weight: bold; }
+  font-weight: bold;
+}
 .c-legal .content {
-  padding-top: 30px; }
-  .c-legal .content p {
-    margin-left: calc(50% - 250px);
-    max-width: 500px;
-    line-height: 25px;
-    letter-spacing: 0.4px; }
+  padding-top: 30px;
+}
+.c-legal .content p {
+  margin-left: calc(50% - 250px);
+  max-width: 500px;
+  line-height: 25px;
+  letter-spacing: 0.4px;
+}
 .c-legal .go-back {
-  margin-top: 35px; }
+  margin-top: 35px;
+}
 
 .c-navigation {
-  height: 80px; }
-  .c-navigation .logo {
-    float: left;
-    margin-top: 10px;
-    font-weight: bold;
-    font-size: 30px;
-    letter-spacing: 1px;
-    text-transform: uppercase; }
-    .c-navigation .logo a {
-      color: black; }
-  .c-navigation .menu-items {
-    float: right; }
-    .c-navigation .menu-items .item {
-      margin-top: 25px;
-      display: inline-block;
-      margin-right: 25px;
-      font-size: 14px;
-      letter-spacing: 0.4px; }
-      .c-navigation .menu-items .item:last-child {
-        margin-right: 0px; }
+  height: 80px;
+}
+.c-navigation .logo {
+  float: left;
+  margin-top: 10px;
+  font-weight: bold;
+  font-size: 30px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+.c-navigation .logo a {
+  color: black;
+}
+.c-navigation .menu-items {
+  float: right;
+}
+.c-navigation .menu-items .item {
+  margin-top: 25px;
+  display: inline-block;
+  margin-right: 25px;
+  font-size: 14px;
+  letter-spacing: 0.4px;
+}
+.c-navigation .menu-items .item:last-child {
+  margin-right: 0px;
+}
 
 .c-lobby {
   width: 60%;
-  margin-left: calc(20%); }
-  .c-lobby .title {
-    font-weight: bold;
-    font-size: large; }
-  .c-lobby .item {
-    font-size: 12px;
-    text-align: left; }
-    .c-lobby .item .c-user-input .sub-title {
-      font-size: normal;
-      letter-spacing: 0.4px; }
-    .c-lobby .item .padding {
-      margin-top: 10px; }
-  .c-lobby .left {
-    width: 60%;
-    float: left;
-    padding-right: 5%; }
-  .c-lobby .right {
-    margin-top: 5px;
-    width: 40%;
-    float: right; }
-    .c-lobby .right .join-lobby {
-      display: inline-block; }
-      .c-lobby .right .join-lobby .button {
-        margin-left: 5px;
-        width: 200px;
-        font-weight: bold; }
-    .c-lobby .right .create-lobby .button {
-      margin-left: 5px;
-      width: 200px;
-      font-weight: bold; }
-  .c-lobby .warning {
-    font-size: 12px;
-    margin-top: 15px;
-    float: left;
-    width: 100%; }
+  margin-left: calc(20%);
+}
+.c-lobby .title {
+  font-weight: bold;
+  font-size: large;
+}
+.c-lobby .item {
+  font-size: 12px;
+  text-align: left;
+}
+.c-lobby .item .c-user-input .sub-title {
+  font-size: normal;
+  letter-spacing: 0.4px;
+}
+.c-lobby .item .padding {
+  margin-top: 10px;
+}
+.c-lobby .left {
+  width: 60%;
+  float: left;
+  padding-right: 5%;
+}
+.c-lobby .right {
+  margin-top: 5px;
+  width: 40%;
+  float: right;
+}
+.c-lobby .right .join-lobby {
+  display: inline-block;
+}
+.c-lobby .right .join-lobby .button {
+  margin-left: 5px;
+  width: 200px;
+  font-weight: bold;
+}
+.c-lobby .right .create-lobby .button {
+  margin-left: 5px;
+  width: 200px;
+  font-weight: bold;
+}
+.c-lobby .warning {
+  font-size: 12px;
+  margin-top: 15px;
+  float: left;
+  width: 100%;
+}
 
 .c-game .banner {
   height: 50px;
@@ -93,182 +118,234 @@
   font-weight: bold;
   font-size: 18px;
   text-align: center;
-  line-height: 45px; }
+  line-height: 45px;
+}
 .c-game .game-content {
-  height: 800px; }
-  .c-game .game-content .c-drawable .title {
-    height: 60px; }
-    .c-game .game-content .c-drawable .title .text {
-      margin-top: 30px;
-      font-size: 16px; }
-  .c-game .game-content .c-drawable .drawing-container {
-    display: inline-block;
-    width: 378px;
-    border-width: 1px;
-    border-style: solid;
-    border-color: black; }
-  .c-game .game-content .c-drawable .c-settings {
-    padding-left: 10px;
-    display: inline-block;
-    width: 500px;
-    height: 377px; }
-    .c-game .game-content .c-drawable .c-settings .c-pencil-size {
-      float: right;
-      height: 80px;
-      width: 100%; }
-      .c-game .game-content .c-drawable .c-settings .c-pencil-size .text {
-        font-weight: bold; }
-    .c-game .game-content .c-drawable .c-settings .c-colors {
-      float: right; }
-      .c-game .game-content .c-drawable .c-settings .c-colors .text {
-        font-weight: bold;
-        margin-bottom: 10px; }
-      .c-game .game-content .c-drawable .c-settings .c-colors .item {
-        margin-left: 7px;
-        display: inline-block;
-        width: 40px;
-        height: 40px;
-        border-width: 1px;
-        border-style: solid;
-        border-color: black;
-        border-radius: 4px; }
-        .c-game .game-content .c-drawable .c-settings .c-colors .item:hover {
-          border-color: blue;
-          border-width: 3px; }
-      .c-game .game-content .c-drawable .c-settings .c-colors .active {
-        border-color: black;
-        border-width: 3px; }
-    .c-game .game-content .c-drawable .c-settings .c-submit {
-      margin-top: 20px;
-      float: right;
-      width: 100%; }
-      .c-game .game-content .c-drawable .c-settings .c-submit .text {
-        font-weight: bold;
-        margin-bottom: 10px; }
-      .c-game .game-content .c-drawable .c-settings .c-submit .submit button {
-        width: 120px; }
+  height: 800px;
+}
+.c-game .game-content .c-drawable .title {
+  height: 60px;
+}
+.c-game .game-content .c-drawable .title .text {
+  margin-top: 30px;
+  font-size: 16px;
+}
+.c-game .game-content .c-drawable .drawing-container {
+  display: inline-block;
+  width: 378px;
+  border-width: 1px;
+  border-style: solid;
+  border-color: black;
+}
+.c-game .game-content .c-drawable .c-settings {
+  padding-left: 10px;
+  display: inline-block;
+  width: 500px;
+  height: 377px;
+}
+.c-game .game-content .c-drawable .c-settings .c-pencil-size {
+  float: right;
+  height: 80px;
+  width: 100%;
+}
+.c-game .game-content .c-drawable .c-settings .c-pencil-size .text {
+  font-weight: bold;
+}
+.c-game .game-content .c-drawable .c-settings .c-colors {
+  float: right;
+}
+.c-game .game-content .c-drawable .c-settings .c-colors .text {
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+.c-game .game-content .c-drawable .c-settings .c-colors .item {
+  margin-left: 7px;
+  display: inline-block;
+  width: 40px;
+  height: 40px;
+  border-width: 1px;
+  border-style: solid;
+  border-color: black;
+  border-radius: 4px;
+}
+.c-game .game-content .c-drawable .c-settings .c-colors .item:hover {
+  border-color: blue;
+  border-width: 3px;
+}
+.c-game .game-content .c-drawable .c-settings .c-colors .active {
+  border-color: black;
+  border-width: 3px;
+}
+.c-game .game-content .c-drawable .c-settings .c-submit {
+  margin-top: 20px;
+  float: right;
+  width: 100%;
+}
+.c-game .game-content .c-drawable .c-settings .c-submit .text {
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+.c-game .game-content .c-drawable .c-settings .c-submit .submit button {
+  width: 120px;
+}
 
 .c-loading {
-  height: 100%; }
-  .c-loading .lds-dual-ring {
-    margin-top: calc(20%);
-    display: inline-block;
-    width: 80px;
-    height: 80px; }
-  .c-loading .lds-dual-ring:after {
-    content: " ";
-    display: block;
-    width: 64px;
-    height: 64px;
-    margin: 8px;
-    border-radius: 50%;
-    border: 6px solid #000;
-    border-color: #000 transparent #000 transparent;
-    animation: lds-dual-ring 1.2s linear infinite; }
+  height: 100%;
+}
+.c-loading .lds-dual-ring {
+  margin-top: calc(20%);
+  display: inline-block;
+  width: 80px;
+  height: 80px;
+}
+.c-loading .lds-dual-ring:after {
+  content: " ";
+  display: block;
+  width: 64px;
+  height: 64px;
+  margin: 8px;
+  border-radius: 50%;
+  border: 6px solid #000;
+  border-color: #000 transparent #000 transparent;
+  animation: lds-dual-ring 1.2s linear infinite;
+}
 @keyframes lds-dual-ring {
   0% {
-    transform: rotate(0deg); }
+    transform: rotate(0deg);
+  }
   100% {
-    transform: rotate(360deg); } }
+    transform: rotate(360deg);
+  }
+}
+
 .c-waiting-page .title {
-  margin-top: 100px; }
-  .c-waiting-page .title .text {
-    font-weight: bold;
-    font-size: 18px; }
+  margin-top: 100px;
+}
+.c-waiting-page .title .text {
+  font-weight: bold;
+  font-size: 18px;
+}
 .c-waiting-page .button {
-  margin-top: 30px; }
+  margin-top: 30px;
+}
 
 .c-captions .title {
-  height: 60px; }
-  .c-captions .title .text {
-    margin-top: 30px;
-    font-size: 16px; }
+  height: 60px;
+}
+.c-captions .title .text {
+  margin-top: 30px;
+  font-size: 16px;
+}
 .c-captions .content {
   margin-left: 25%;
-  width: 50%; }
+  width: 50%;
+}
 .c-captions .c-settings .c-submit {
   margin-top: 20px;
   float: right;
-  width: 100%; }
-  .c-captions .c-settings .c-submit .text {
-    font-weight: bold;
-    margin-bottom: 10px; }
-  .c-captions .c-settings .c-submit .submit button {
-    width: 120px; }
+  width: 100%;
+}
+.c-captions .c-settings .c-submit .text {
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+.c-captions .c-settings .c-submit .submit button {
+  width: 120px;
+}
 
 .c-player-banner {
   height: 30px;
   line-height: 25px;
-  background: #1890ff; }
-  .c-player-banner div {
-    display: inline-block;
-    font-weight: bold;
-    font-size: 12px;
-    letter-spacing: 0.4px;
-    color: white; }
-  .c-player-banner .padding {
-    padding-left: 10px; }
+  background: #1890ff;
+}
+.c-player-banner div {
+  display: inline-block;
+  font-weight: bold;
+  font-size: 12px;
+  letter-spacing: 0.4px;
+  color: white;
+}
+.c-player-banner .padding {
+  padding-left: 10px;
+}
 
 .c-choices .title .text {
   margin-top: 20px;
-  margin-bottom: 20px; }
+  margin-bottom: 20px;
+}
 .c-choices .content .item {
-  display: inline-block; }
-  .c-choices .content .item div {
-    margin-left: 20px;
-    border-style: solid;
-    border-width: 2px;
-    border-color: black; }
-    .c-choices .content .item div:first {
-      margin-left: 0px; }
+  display: inline-block;
+}
+.c-choices .content .item div {
+  margin-left: 20px;
+  border-style: solid;
+  border-width: 2px;
+  border-color: black;
+}
+.c-choices .content .item div:first {
+  margin-left: 0px;
+}
 .c-choices .content .selected div {
-  border-color: #1890ff !important; }
+  border-color: #1890ff !important;
+}
 .c-choices .content-captions {
   width: 50%;
-  margin-left: calc(25%); }
-  .c-choices .content-captions .title {
-    font-weight: bold;
-    font-size: 18px;
-    margin-top: 15px; }
-  .c-choices .content-captions .item {
-    margin-left: 10%;
-    width: 100%; }
-    .c-choices .content-captions .item label {
-      width: 100%;
-      padding-top: 15px;
-      float: left;
-      letter-spacing: 1.0px;
-      font-size: 12px; }
+  margin-left: calc(25%);
+}
+.c-choices .content-captions .title {
+  font-weight: bold;
+  font-size: 18px;
+  margin-top: 15px;
+}
+.c-choices .content-captions .item {
+  margin-left: 10%;
+  width: 100%;
+}
+.c-choices .content-captions .item label {
+  width: 100%;
+  padding-top: 15px;
+  float: left;
+  letter-spacing: 1px;
+  font-size: 12px;
+}
 .c-choices .c-settings .c-submit {
   margin-top: 20px;
   float: right;
-  width: 100%; }
-  .c-choices .c-settings .c-submit .text {
-    font-weight: bold;
-    margin-bottom: 10px; }
-  .c-choices .c-settings .c-submit .submit button {
-    width: 120px; }
+  width: 100%;
+}
+.c-choices .c-settings .c-submit .text {
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+.c-choices .c-settings .c-submit .submit button {
+  width: 120px;
+}
 
 .c-App {
   height: 100%;
   width: 100%;
   position: absolute;
-  background: #f4f8fe; }
+  background: #f4f8fe;
+}
 
 .App {
   width: 960px;
   margin-left: calc(50% - 480px);
   height: 100%;
   position: absolute;
-  text-align: center; }
+  text-align: center;
+}
 
 .App-logo {
   height: 40vmin;
-  pointer-events: none; }
+  pointer-events: none;
+}
 
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
-    animation: App-logo-spin infinite 20s linear; } }
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
 .App-header {
   background-color: #282c34;
   min-height: 100vh;
@@ -277,15 +354,20 @@
   align-items: center;
   justify-content: center;
   font-size: calc(10px + 2vmin);
-  color: white; }
+  color: white;
+}
 
 .App-link {
-  color: #61dafb; }
+  color: #61dafb;
+}
 
 @keyframes App-logo-spin {
   from {
-    transform: rotate(0deg); }
+    transform: rotate(0deg);
+  }
   to {
-    transform: rotate(360deg); } }
+    transform: rotate(360deg);
+  }
+}
 
 /*# sourceMappingURL=App.css.map */

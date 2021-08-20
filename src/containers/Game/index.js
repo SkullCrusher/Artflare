@@ -21,13 +21,24 @@ import { addArt, addCaption, addCombo } from '../../redux/actions/userMade';
   Configuration
 */
 
+const totalDrawings           = 3;  // How many pictures are they gonna draw.
+const bufferTime              = 10; // How many seconds buffer do we give each client.
+
 // How many players to actually start a match (aka 2).
 const numberOfPlayersRequired = 1;  // 2;
 const secondsToDrawEachImage  = 10; // 90;
 const secondsToWriteCaptions  = 10; // 60;
 const secondsToChoose         = 20; //
-const totalDrawings           = 3;  // How many pictures are they gonna draw.
-const bufferTime              = 10; // How many seconds buffer do we give each client.
+const secondsToVote           = 30; //
+
+// Base time calc.
+const captionStart     = (secondsToDrawEachImage * totalDrawings) + secondsToWriteCaptions;
+const syncStart        = captionStart + bufferTime;
+const choicesStart     = syncStart + secondsToChoose;
+const choicesWaitStart = choicesStart + bufferTime;
+const voteTimeStart    = choicesWaitStart + secondsToVote;
+
+
 
 const finishedDrawingText = "Good Job! We are waiting on the others now."
 const domain = "wss://art-name-wip.radiolaria.workers.dev/api/room/##room##/websocket"
@@ -55,12 +66,12 @@ class Game extends React.Component {
   state = {
     // If our websocket is ready.
     ready: false,
-    
+
     // Help track timing for each.
     currentTime:    0,
     startTimestamp: 0,
     secondsLeft:    0,
-    
+
     // Drawing variables.
     drawingCount: 1, // (1 of 3)
 
@@ -74,7 +85,7 @@ class Game extends React.Component {
    * Basically the game ticker to move things forward.
    */
   loop = () => {
-    
+  
     if(!this.state.ready){
       return;
     }
@@ -93,7 +104,7 @@ class Game extends React.Component {
       this.ws.send(JSON.stringify(this.props.toSend[0]));
 
       // Remove the message we just sent.
-      this.props.removeFirstToSend();      
+      this.props.removeFirstToSend();
     }
 
     // If we are waiting for players and everyone is ready, start.
@@ -102,7 +113,7 @@ class Game extends React.Component {
       const total = this.props.users.length;
 
       // Don't check unless we have enough users to play.
-      if(total >= numberOfPlayersRequired){             
+      if(total >= numberOfPlayersRequired){
         let readyCount = 0;
 
         for(let i = 0; i < this.props.users.length; i += 1){
@@ -132,10 +143,10 @@ class Game extends React.Component {
     }
 
     if(this.state.phase === "drawing"){
-      
+
       // Update our seconds left.
       let secondsLeft = (this.state.startTimestamp + (secondsToDrawEachImage * this.state.drawingCount)) - this.state.currentTime;
-      
+
       // Force it to be at least 0.
       if(secondsLeft < 0){
         secondsLeft = 0;
@@ -159,9 +170,9 @@ class Game extends React.Component {
     if(this.state.phase === "captions"){
 
       // Update our seconds left.
-      const base = (this.state.startTimestamp + (secondsToDrawEachImage * totalDrawings)) + secondsToWriteCaptions;
+      const base = this.state.startTimestamp + captionStart;
       let secondsLeft = base - this.state.currentTime;
-      
+
       // Force it to be at least 0.
       if(secondsLeft < 0){
         secondsLeft = 0;
@@ -178,31 +189,30 @@ class Game extends React.Component {
 
     if(this.state.phase === "sync"){
       // Update our seconds left.
-      const base = (this.state.startTimestamp + (secondsToDrawEachImage * totalDrawings)) + bufferTime + secondsToWriteCaptions;
-     
+      const base = this.state.startTimestamp + syncStart;
+
       if(this.state.currentTime > base){
         this.setState({ phase: "choices" });
       }
     }
 
     if(this.state.phase === "choices"){
-      
 
        // Update our seconds left.
-       const base = (this.state.startTimestamp + (secondsToDrawEachImage * totalDrawings)) + bufferTime + secondsToWriteCaptions + secondsToChoose;
-     
+       const base = this.state.startTimestamp + choicesStart;
+
        if(this.state.currentTime > base){
          this.setState({ phase: "waiting-for-choices" });
        }
 
        let secondsLeft = base - this.state.currentTime;
-      
+
         // Force it to be at least 0.
         if(secondsLeft < 0){
           secondsLeft = 0;
-  
+
           // Go to the next drawing state.
-          this.setState({ phase: "sync" })
+          this.setState({ phase: "waiting-for-choices" })
         }
 
         // Only update if it's not the same.
@@ -213,10 +223,55 @@ class Game extends React.Component {
 
     if(this.state.phase === "waiting-for-choices"){
 
+       // Update our seconds left.
+       const base = this.state.startTimestamp + choicesWaitStart;
+
+       if(this.state.currentTime > base){
+         this.setState({ phase: "voting" });
+       }
+
+       let secondsLeft = base - this.state.currentTime;
+
+        // Force it to be at least 0.
+        if(secondsLeft < 0){
+          secondsLeft = 0;
+
+          // Go to the next drawing state.
+          this.setState({ phase: "voting" })
+        }
+
+        // Only update if it's not the same.
+        if(this.state.secondsLeft !== secondsLeft){
+          this.setState({ secondsLeft: secondsLeft });
+        }
     }
 
     if(this.state.phase === "voting"){
+      // Update our seconds left.
+      const base = this.state.startTimestamp + voteTimeStart;
 
+      if(this.state.currentTime > base){
+        this.setState({ phase: "winning" });
+      }
+
+      let secondsLeft = base - this.state.currentTime;
+
+      // Force it to be at least 0.
+      if(secondsLeft < 0){
+        secondsLeft = 0;
+
+        // Go to the next drawing state.
+        this.setState({ phase: "winning" })
+      }
+
+      // Only update if it's not the same.
+      if(this.state.secondsLeft !== secondsLeft){
+        this.setState({ secondsLeft: secondsLeft });
+      }
+    }
+
+    if(this.state.phase === "winning"){
+      // winning
     }
   }
 
@@ -332,7 +387,7 @@ class Game extends React.Component {
    * return {markup}
    */
   generateCaption = () => {
-    return (<div>todo</div>)     
+    return (<div>todo</div>)
   };
   /**
    * # generateVoting
@@ -355,8 +410,6 @@ class Game extends React.Component {
 
   pageSelector = () => {
 
-    // return <Loading text={finishedDrawingText} />
-    
     switch(this.state.phase){
 
       // Waiting for the websocket connection.
@@ -391,12 +444,15 @@ class Game extends React.Component {
       case "waiting-for-choices": return { content: (<Loading text={finishedDrawingText} secondsLeft={secondsToCountdown(this.state.secondsLeft)} />), text: "Waiting for players to catch up" }
 
       // (CSP-9): Generate the page for voting.
-      case "voting": return { content: (<Loading text={finishedDrawingText} />), text: "Create a submission" }
+      case "voting": return { content: (<Loading text={finishedDrawingText} />), text: "Voting" }
+
+      // (CSP-12): Winner phase for the gamemode.
+      case "winning": return { content: (<Loading text={finishedDrawingText} />), text: "Winning" }
 
       // We had an error or lost internet access.
       case "disconnected": return { content: (<GameErrorPage />), text: "Error: Connecting to server" }
     }
-    
+
     return { content: null, text: "Error"};
   }
 
