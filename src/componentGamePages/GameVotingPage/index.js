@@ -33,10 +33,6 @@ class GameVotingPage extends React.Component {
    */
   handleSubmit = () => {
 
-    console.log("this")
-
-    // maker
-
     let payload = this.props.combos[this.state.selectedIndex]
     
     payload["voter"] = this.props.username

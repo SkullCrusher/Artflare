@@ -5,56 +5,76 @@ import CanvasDraw from "react-canvas-draw";
 
 import { addToSend } from '../../redux/actions/messages';
 
+const artPlaceholder = {
+    art: `{"lines":[],"width":375,"height":375}`,
+    hash: `388be4d521089432af89f135382f4c29e83442f6`,
+    username: "developer"
+}
+
+const captionPlaceholder = {
+    caption: "No Caption",
+    username: "developer",
+    hash: "81cc74b48d8baa856103ae262c67afcd9bc55694"
+}
+
+function sortListByUsername(arg){
+    arg.sort(function (a, b) {
+        return ('' + a.username).localeCompare(b.username);
+    })
+
+    return arg;
+}
+
+function sortListByHash(arg){
+    arg.sort(function (a, b) {
+        return ('' + a.hash).localeCompare(b.hash);
+    })
+
+    return arg;
+}
+
+// Give out the resources to the users in a guaranteed order.
+function dishOutTheGoods(arg, count, userList, placeholder){
+
+    let results = {}
+
+    // Give every user a record.
+    for(let i = 0; i < userList.length; i += 1){
+        results[userList[i].username] = []
+    }
+
+    // Loop over all of the records we want to give out and give one to each user.
+    let index = 0;
+    for(let i = 0; i < arg.length; i += 1){
+        results[userList[index].username].push(arg[i]);
+
+        // Bump us to the next one.
+        index += 1;
+        if(index >= userList.length){
+            index = 0;
+        }
+    }
+ 
+    // Pad out any users that do not have enough.
+    for(let i = 0; i < userList.length; i += 1){
+        let current = userList[i].username;
+
+        while(results[current].length < count){
+            results[current].push(placeholder);
+        }
+    }
+
+    return results;
+}
+
 class GameDrawningPage extends React.Component {
 
-  state = {
+    state = {
     selectedArt: 0,
     selectedCaption: -1,
 
-    artList: [
-        {
-            art: `{"lines":[],"width":375,"height":375}`,
-            hash: `088be4d521089432af89f135382f4c29e83442f6`,
-            username: "asddasads"
-        },
-        {
-            art:  `{"lines":[{"points":[{"x":186,"y":167},{"x":186,"y":167},{"x":185,"y":166},{"x":182,"y":163},{"x":177,"y":158},{"x":171,"y":151},{"x":165,"y":145},{"x":160,"y":138},{"x":156,"y":131},{"x":154,"y":126},{"x":153,"y":120},{"x":153,"y":115},{"x":153,"y":109},{"x":153,"y":103},{"x":154,"y":98},{"x":157,"y":92},{"x":160,"y":86},{"x":165,"y":81},{"x":171,"y":76},{"x":177,"y":72},{"x":184,"y":69},{"x":189,"y":66},{"x":196,"y":64},{"x":200,"y":62},{"x":206,"y":60},{"x":211,"y":59},{"x":214,"y":58},{"x":217,"y":58},{"x":219,"y":58},{"x":220,"y":58},{"x":221,"y":58},{"x":222,"y":58},{"x":223,"y":58},{"x":225,"y":58},{"x":227,"y":59},{"x":232,"y":61},{"x":233,"y":62},{"x":235,"y":63},{"x":237,"y":66},{"x":240,"y":68},{"x":243,"y":71},{"x":245,"y":74},{"x":246,"y":77},{"x":248,"y":81},{"x":249,"y":86},{"x":250,"y":90},{"x":251,"y":96},{"x":251,"y":103},{"x":251,"y":108},{"x":250,"y":115},{"x":249,"y":120},{"x":248,"y":127},{"x":246,"y":133},{"x":244,"y":141},{"x":242,"y":148},{"x":239,"y":155},{"x":237,"y":161},{"x":235,"y":167},{"x":233,"y":172},{"x":231,"y":176},{"x":228,"y":181},{"x":226,"y":185},{"x":223,"y":189},{"x":221,"y":194},{"x":218,"y":199},{"x":214,"y":203},{"x":211,"y":207},{"x":207,"y":212},{"x":204,"y":217},{"x":200,"y":221},{"x":195,"y":227},{"x":190,"y":232},{"x":185,"y":238},{"x":180,"y":243},{"x":176,"y":248},{"x":173,"y":252},{"x":169,"y":255},{"x":167,"y":258},{"x":165,"y":261},{"x":163,"y":264},{"x":161,"y":267},{"x":159,"y":270},{"x":157,"y":274},{"x":156,"y":276},{"x":154,"y":279},{"x":153,"y":281},{"x":152,"y":284},{"x":151,"y":285},{"x":151,"y":286},{"x":151,"y":287},{"x":151,"y":287}],"brushColor":"#000000","brushRadius":2}],"width":375,"height":375}`,
-            hash: `088be4d521089432af89f135382f4c29e83442f6`,
-            username: "asddasads"
-        },
-        {
-            art:  `{"lines":[{"points":[{"x":186,"y":167},{"x":186,"y":167},{"x":185,"y":166},{"x":182,"y":163},{"x":177,"y":158},{"x":171,"y":151},{"x":165,"y":145},{"x":160,"y":138},{"x":156,"y":131},{"x":154,"y":126},{"x":153,"y":120},{"x":153,"y":115},{"x":153,"y":109},{"x":153,"y":103},{"x":154,"y":98},{"x":157,"y":92},{"x":160,"y":86},{"x":165,"y":81},{"x":171,"y":76},{"x":177,"y":72},{"x":184,"y":69},{"x":189,"y":66},{"x":196,"y":64},{"x":200,"y":62},{"x":206,"y":60},{"x":211,"y":59},{"x":214,"y":58},{"x":217,"y":58},{"x":219,"y":58},{"x":220,"y":58},{"x":221,"y":58},{"x":222,"y":58},{"x":223,"y":58},{"x":225,"y":58},{"x":227,"y":59},{"x":232,"y":61},{"x":233,"y":62},{"x":235,"y":63},{"x":237,"y":66},{"x":240,"y":68},{"x":243,"y":71},{"x":245,"y":74},{"x":246,"y":77},{"x":248,"y":81},{"x":249,"y":86},{"x":250,"y":90},{"x":251,"y":96},{"x":251,"y":103},{"x":251,"y":108},{"x":250,"y":115},{"x":249,"y":120},{"x":248,"y":127},{"x":246,"y":133},{"x":244,"y":141},{"x":242,"y":148},{"x":239,"y":155},{"x":237,"y":161},{"x":235,"y":167},{"x":233,"y":172},{"x":231,"y":176},{"x":228,"y":181},{"x":226,"y":185},{"x":223,"y":189},{"x":221,"y":194},{"x":218,"y":199},{"x":214,"y":203},{"x":211,"y":207},{"x":207,"y":212},{"x":204,"y":217},{"x":200,"y":221},{"x":195,"y":227},{"x":190,"y":232},{"x":185,"y":238},{"x":180,"y":243},{"x":176,"y":248},{"x":173,"y":252},{"x":169,"y":255},{"x":167,"y":258},{"x":165,"y":261},{"x":163,"y":264},{"x":161,"y":267},{"x":159,"y":270},{"x":157,"y":274},{"x":156,"y":276},{"x":154,"y":279},{"x":153,"y":281},{"x":152,"y":284},{"x":151,"y":285},{"x":151,"y":286},{"x":151,"y":287},{"x":151,"y":287}],"brushColor":"#000000","brushRadius":2}],"width":375,"height":375}`,
-            hash: `088be4d521089432af89f135382f4c29e83442f6`,
-            username: "asddasads"
-        }
-    ],
-    captionList: [
-        {
-            caption: "caption1",
-            username: "asddasads",
-            hash: "81cc74b48d8baa856103ae262c67afcd9bc55694"
-        },
-        {
-            caption: "12344asdsdaasddaadsadsasdasdaaddadasasdasdadsaads",
-            username: "asddasads",
-            hash: "81cc74b48d8baa856103ae262c67afcd9bc55694"
-        },
-        {
-            caption: "caption1caption1caption1caption1caption1",
-            username: "asddasads",
-            hash: "81cc74b48d8baa856103ae262c67afcd9bc55694"
-        },
-        {
-            caption: "caption122342caption1",
-            username: "asddasads",
-            hash: "81cc74b48d8baa856103ae262c67afcd9bc55694"
-        },
-        {
-            caption: "caption1asd",
-            username: "asddasads",
-            hash: "81cc74b48d8baa856103ae262c67afcd9bc55694"
-        }
-    ],
+    artList: [],
+    captionList: [],
 
     // Drawable stuff.
     loadTimeOffset: 5,
@@ -71,12 +91,12 @@ class GameDrawningPage extends React.Component {
     saveData: null,
     immediateLoading: false,
     hideInterface: false
-  };
-  /**
-   * # submit
-   * Save the value so we can
-   */
-  submit = () => {
+    };
+    /**
+    * # submit
+    * Save the value so we can
+    */
+    submit = () => {
 
     // Prevent submission if we don't have a art and caption selected.
     if(this.state.selectedArt === 0 || this.state.selectedCaption === - 1){
@@ -95,21 +115,43 @@ class GameDrawningPage extends React.Component {
     this.props.addToSend({ message: payload })
   
     this.props.done();
-  }
+    }
+    /**
+     * # handleDistribution
+     * Sort the material and handle giving it to users.
+     */
+    handleDistribution = () => {
 
-  componentDidMount(){
-    setTimeout(()=>{
+        // We have to sort it so everyone is on the same page.
+        const sortedArt           = sortListByHash(this.props.art)
+        const sortedCaptions      = sortListByHash(this.props.captions)
+        const sortedPlayers       = sortListByUsername(this.props.users)
 
-        if(this.saveableCanvas1 === null){
-            return
-        }
+        const distributedArt      = dishOutTheGoods(sortedArt,      3, sortedPlayers, artPlaceholder)
+        const distributedCaptions = dishOutTheGoods(sortedCaptions, 5, sortedPlayers, captionPlaceholder)
 
-        // Set up the canvas for us.
-        this.saveableCanvas1.loadSaveData(this.state.artList[0].art, true)
-        this.saveableCanvas2.loadSaveData(this.state.artList[1].art, true)
-        this.saveableCanvas3.loadSaveData(this.state.artList[2].art, true)
-    }, 250);
-  }
+        // Update our state.
+        this.setState({
+            artList:     distributedArt[this.props.username],
+            captionList: distributedCaptions[this.props.username],
+        })
+
+        // Once we find what we want, tell it to render the images.
+        setTimeout(()=>{
+
+            // Just block it if canvas didn't load because it will crash (shouldn't happen).
+            if(this.saveableCanvas1 === null){ return }
+
+            // Set up the canvas for us.
+            this.saveableCanvas1.loadSaveData(this.state.artList[0].art, true)
+            this.saveableCanvas2.loadSaveData(this.state.artList[1].art, true)
+            this.saveableCanvas3.loadSaveData(this.state.artList[2].art, true)
+        }, 250);
+    }
+
+    componentDidMount(){
+        this.handleDistribution(); // setTimeout(this.handleDistribution, 2500);
+    }
 
   /**
    * # render
@@ -118,7 +160,7 @@ class GameDrawningPage extends React.Component {
 
     let captionList = []
 
-    for(let i = 0; i < this.state.captionList.length; i += 1){
+    for(let i = 0; i < this.state.captionList.length && i < 5; i += 1){
         captionList.push((
             <div className="item">
                 <Checkbox
@@ -189,7 +231,11 @@ class GameDrawningPage extends React.Component {
 }
 
 const myStateToProps = (state) => {
-    return {};
+    return {
+        art: state.userMadeReducer.art,
+        captions: state.userMadeReducer.captions,
+        users: state.usersReducer.users,
+    };
 };
   
 export default connect(myStateToProps, { addToSend })(GameDrawningPage);

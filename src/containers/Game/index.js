@@ -401,7 +401,9 @@ class Game extends React.Component {
       this.ws.send(JSON.stringify({ name: this.state.username }))
 
       // Set our interal state to waiting for the game to start.
-      this.setState({ phase: "waiting" });
+      if(!blockRedirect){
+        this.setState({ phase: "waiting" });
+      }
     };
 
     this.ws.onmessage = evt => {
