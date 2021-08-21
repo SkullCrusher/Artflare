@@ -17,6 +17,18 @@
         padding-left: 10px;
     }
 
+    .invite {
+        position: absolute;
+        right: 0;
+        margin-right: 10px;
+        cursor: pointer;
+
+        &:hover {
+            color: red;
+            
+        }
+    }
+
     
 
 }

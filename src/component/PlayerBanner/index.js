@@ -29,6 +29,13 @@ class PlayerBanner extends React.Component {
     clearInterval(this.timer);
   }
 
+  copyCode = () => {
+    // this.props.lobbyCode
+    alert("copy")
+
+    // Copy link to clipboard.
+
+  }
 
   /**
    * # render
@@ -37,6 +44,7 @@ class PlayerBanner extends React.Component {
 
     let playerCountMarkup = (<div>Player Count: {this.state.playerCount}</div>)
     let readyCountMarkup  = (<div className="padding">Players Ready: {this.state.readyCount}</div>)
+    let lobbyInviteMarkup = (<div className="invite" onClick={this.copyCode}>Click to copy room invite</div>)
 
     if(this.state.playerCount === 0){
         playerCountMarkup = null;
@@ -46,10 +54,14 @@ class PlayerBanner extends React.Component {
         readyCountMarkup = null;
     }
 
+    // If we have a lobby code.
+
+
     return (
         <div className="c-player-banner">
             {playerCountMarkup}
             {readyCountMarkup}
+            {lobbyInviteMarkup}
         </div>
     )
   };

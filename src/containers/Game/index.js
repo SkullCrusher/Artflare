@@ -572,6 +572,10 @@ class Game extends React.Component {
 
   componentWillUnmount(){
     clearInterval(this.timer);
+
+    // Close our websocket and reset our redux.
+    this.props.resetUserMade();
+    this.ws.close();
   }
 
   /**
@@ -584,7 +588,7 @@ class Game extends React.Component {
     return (
       <div className="c-game">
         <div className="user-info">
-          <PlannerBanner phase={this.state.phase} />
+          <PlannerBanner lobbyCode={this.state.lobbyCode} phase={this.state.phase} />
         </div>
         <Card className="game-content">
             <div className="banner">
@@ -599,9 +603,6 @@ class Game extends React.Component {
 
 
 const myStateToProps = (state) => {
-
-  console.log("state", state)
-
   return {
     toSend: state.messagesReducer.list,
     users:  state.usersReducer.users,
