@@ -321,68 +321,65 @@ class Game extends React.Component {
   handleMessage = (arg) => {
     // console.log("[message]: ", arg)
 
-    // We ignore any message that is before our ready state.
-    if(!this.state.ready){
-      return
-    }
+    try{
 
-    // @@art@@
-    if(arg.message.includes("@@art@@")){
-      let cleanedMessage = arg.message.replace("@@art@@", "")
-
-      this.props.addArt({
-        username: arg.name,
-        art: cleanedMessage,
-        hash: hash(cleanedMessage),
-      })
-      return
-    }
-
-    // @@message@@
-    if(arg.message.includes("@@message@@")){
-      let cleanedMessage = arg.message.replace("@@message@@", "")
-
-      this.props.addCaption({
-        username: arg.name,
-        caption: cleanedMessage,
-        hash: hash(cleanedMessage),
-      })
-      return
-    }
-
-    // @@combo@@
-    if(arg.message.includes("@@combo@@")){
-      let cleanedMessage = arg.message.replace("@@combo@@", "").split("##")
-
-      if(cleanedMessage.length < 2){
+      // We ignore any message that is before our ready state.
+      if(!this.state.ready){
         return
       }
 
-      this.props.addCombo({
-        username: arg.name,
-        art: cleanedMessage[0],
-        caption: cleanedMessage[1],
-        hash: hash(cleanedMessage[0] + "##" + cleanedMessage[1]),
-      })
-      return
-    }
+      // @@art@@
+      if(arg.message.includes("@@art@@")){
+        let cleanedMessage = arg.message.replace("@@art@@", "")
 
-    // @@addVote@@
-    if(arg.message.includes("@@addVote@@")){
-
-      let cleanedMessage = arg.message.replace("@@addVote@@", "")
-
-      if(cleanedMessage.length < 2){
-        return
+        this.props.addArt({
+          username: arg.name,
+          art: cleanedMessage,
+          hash: hash(cleanedMessage),
+        })
       }
 
-      try{
-        let tmp = JSON.parse(cleanedMessage);
-        this.props.addVote(tmp)
-      }catch(e){}
+      // @@message@@
+      if(arg.message.includes("@@message@@")){
+        let cleanedMessage = arg.message.replace("@@message@@", "")
 
-      return
-    }    
+        this.props.addCaption({
+          username: arg.name,
+          caption: cleanedMessage,
+          hash: hash(cleanedMessage),
+        })
+      }
+
+      // @@combo@@
+      if(arg.message.includes("@@combo@@")){
+        let cleanedMessage = JSON.parse(arg.message.replace("@@combo@@", ""))
+
+        this.props.addCombo({
+          username: arg.name,
+          art: cleanedMessage.art,
+          caption: cleanedMessage.caption,
+          hash: hash(arg.message),
+        })
+      }
+
+      // @@addVote@@
+      if(arg.message.includes("@@addVote@@")){
+
+        let cleanedMessage = arg.message.replace("@@addVote@@", "")
+
+        if(cleanedMessage.length < 2){
+          return
+        }
+
+        try{
+          let tmp = JSON.parse(cleanedMessage);
+          this.props.addVote(tmp)
+        }catch(e){}
+      }    
+    
+    }catch(e){
+      console.log("[error]: handleMessage", e)
+    }
   }
   /**
    * # connectToLobby

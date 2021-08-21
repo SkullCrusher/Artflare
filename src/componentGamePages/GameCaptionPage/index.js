@@ -30,7 +30,7 @@ class GameDrawningPage extends React.Component {
   
     setTimeout(()=>{
         this.setState({ value: "", submitting: false })
-    }, 2500);
+    }, 500);
   }
 
   onChange = (type) => {

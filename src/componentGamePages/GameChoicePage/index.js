@@ -150,7 +150,7 @@ class GameDrawningPage extends React.Component {
     }
 
     componentDidMount(){
-        this.handleDistribution(); // setTimeout(this.handleDistribution, 2500);
+        this.handleDistribution();
     }
 
   /**

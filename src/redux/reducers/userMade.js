@@ -5,7 +5,8 @@ import types from "../constants";
 
 // set constants
 let initialState = {
-   art:      [
+   art: [
+       /*
         {
             art: `{"lines":[],"width":375,"height":375}`,
             hash: `388be4d521089432af89f135382f4c29e83442f6`,
@@ -21,8 +22,10 @@ let initialState = {
             hash: `288be4d521089432af89f135382f4c29e83442f6`,
             username: "asddasads"
         }
+        */
    ],
    captions: [
+       /*
         {
             caption: "caption1",
             username: "asddasads",
@@ -48,8 +51,10 @@ let initialState = {
             username: "asddasads",
             hash: "81cc74b48d8baa856103ae262c67afcd9bc55694"
         }
+        */
    ],
    combos:   [
+       /*
     { 
         maker: "someusername",
         art:  {
@@ -62,6 +67,7 @@ let initialState = {
             username: "asddasads",
             hash: "81cc74b48d8baa856103ae262c67afcd9bc55694"
         }
+        
     },
     { 
         maker: "someusername",
@@ -76,8 +82,10 @@ let initialState = {
             hash: "81cc74b48d8baa856103ae262c67afcd9bc55694"
         }
     }
+    */
    ],
     votes:    [
+        /*
         {
             voter: "debug",
             maker: "someusername",
@@ -119,7 +127,7 @@ let initialState = {
                 username: "asddasads",
                 hash: "81cc74b48d8baa856103ae262c67afcd9bc55693"
             }
-        },
+        },*/
    ],
 };
 
@@ -139,6 +147,9 @@ const userMadeReducer = (state = initialState, action) => {
             return { ...state };
 
         case types.ADD_COMBO:
+
+            console.log("redux payload", payload)
+
             state.combos.push(payload);
             return { ...state };
 
