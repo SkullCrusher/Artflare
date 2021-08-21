@@ -4,13 +4,13 @@ import { Card }    from 'antd';
 import crypto      from 'crypto';
 
 // Component.
-import GameDrawningPage from '../../component/GameDrawingPage';
-import GameWaitingPage  from '../../component/GameWaitingPage';
-import GameErrorPage    from '../../component/GameErrorPage';
-import GameCaptionPage  from '../../component/GameCaptionPage';
-import GameChoicePage   from '../../component/GameChoicePage';
-import GameVotingPage   from '../../component/GameVotingPage';
-import GameWinningPage  from '../../component/GameWinningPage';
+import GameDrawningPage from '../../componentGamePages/GameDrawingPage';
+import GameWaitingPage  from '../../componentGamePages/GameWaitingPage';
+import GameErrorPage    from '../../componentGamePages/GameErrorPage';
+import GameCaptionPage  from '../../componentGamePages/GameCaptionPage';
+import GameChoicePage   from '../../componentGamePages/GameChoicePage';
+import GameVotingPage   from '../../componentGamePages/GameVotingPage';
+import GameWinningPage  from '../../componentGamePages/GameWinningPage';
 import Loading          from '../../component/Loading';
 import PlannerBanner    from '../../component/PlayerBanner';
 
@@ -309,7 +309,7 @@ class Game extends React.Component {
       if(this.state.currentTime > base){
 
         // Reset redux.
-        // this.props.resetUserMade();
+        this.props.resetUserMade();
 
         // Reset our state.
         this.reset();
@@ -401,9 +401,7 @@ class Game extends React.Component {
       this.ws.send(JSON.stringify({ name: this.state.username }))
 
       // Set our interal state to waiting for the game to start.
-      if(!blockRedirect){
-        this.setState({ phase: "waiting" });
-      }
+      this.setState({ phase: "waiting" });
     };
 
     this.ws.onmessage = evt => {
