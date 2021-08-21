@@ -33,11 +33,19 @@ class GameVotingPage extends React.Component {
    */
   handleSubmit = () => {
 
-    let payload = {
+    console.log("this")
+
+    // maker
+
+    let payload = this.props.combos[this.state.selectedIndex]
+    
+    payload["voter"] = this.props.username
+
+    /*{
       voter:   this.props.username,
       art:     this.props.combos[this.state.selectedIndex].art,
       caption: this.props.combos[this.state.selectedIndex].caption
-    }
+    }*/
 
     // Send our vote.
     this.props.addToSend({ message: "@@addVote@@" + JSON.stringify(payload) })

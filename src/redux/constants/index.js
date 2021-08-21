@@ -18,6 +18,7 @@ const types = {
     "ADD_CAPTION":         "ADD_CAPTION",
     "ADD_COMBO":           "ADD_COMBO",
     "ADD_VOTE":            "ADD_VOTE",
+    "RESET_USER_MADE":     "RESET_USER_MADE",
     
 };
 

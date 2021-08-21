@@ -86,6 +86,7 @@ class GameDrawningPage extends React.Component {
     this.setState({ submitting: true })
 
     let payload = "@@combo@@" + JSON.stringify({ 
+        maker: this.props.username,
         art: this.state.artList[this.state.selectedArt - 1],
         caption: this.state.captionList[this.state.selectedCaption]
     })

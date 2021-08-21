@@ -20,3 +20,9 @@ export const addVote = payload => ({
     "type": types.ADD_VOTE,
     payload
 });
+
+export const resetUserMade = payload => ({
+    "type": types.RESET_USER_MADE,
+    payload
+});
+

@@ -294,6 +294,32 @@
     .c-voting-page .button div button {
       width: 120px; }
 
+.c-winner .title {
+  margin-top: 25px; }
+  .c-winner .title .text {
+    font-size: 24px;
+    letter-spacing: 1px;
+    font-weight: bold; }
+  .c-winner .title .sub-text {
+    font-size: 12px; }
+.c-winner .content {
+  margin-top: 25px; }
+  .c-winner .content .combo .art {
+    margin-left: calc(50% - 127.5px);
+    width: 255px;
+    border-style: solid;
+    border-width: 2px;
+    border-color: black; }
+  .c-winner .content .combo .caption {
+    margin-top: 10px;
+    font-weight: bold; }
+.c-winner .details {
+  margin-top: 15px;
+  letter-spacing: 0.4px;
+  font-size: 12px; }
+  .c-winner .details div {
+    margin-top: 5px; }
+
 .c-App {
   height: 100%;
   width: 100%;

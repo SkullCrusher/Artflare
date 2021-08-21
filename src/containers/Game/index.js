@@ -10,13 +10,14 @@ import GameErrorPage    from '../../component/GameErrorPage';
 import GameCaptionPage  from '../../component/GameCaptionPage';
 import GameChoicePage   from '../../component/GameChoicePage';
 import GameVotingPage   from '../../component/GameVotingPage';
+import GameWinningPage  from '../../component/GameWinningPage';
 import Loading          from '../../component/Loading';
 import PlannerBanner    from '../../component/PlayerBanner';
 
 // Redux.
 import { addUsername, removeUsername, setUsernameStatus } from "../../redux/actions/users";
 import { removeFirstToSend } from  '../../redux/actions/messages';
-import { addArt, addCaption, addCombo, addVote } from '../../redux/actions/userMade';
+import { addArt, addCaption, addCombo, addVote, resetUserMade } from '../../redux/actions/userMade';
 
 /*
   Configuration
@@ -31,6 +32,7 @@ const secondsToDrawEachImage  = 10; // 90;
 const secondsToWriteCaptions  = 10; // 60;
 const secondsToChoose         = 20; //
 const secondsToVote           = 20; //
+const secondsOnWinningPage    = 20;
 
 // Base time calc.
 const captionStart         = (secondsToDrawEachImage * totalDrawings) + secondsToWriteCaptions;
@@ -39,6 +41,7 @@ const choicesStart         = syncStart + secondsToChoose;
 const choicesWaitStart     = choicesStart + bufferTime;
 const voteTimeStart        = choicesWaitStart + secondsToVote;
 const voteWaitingTimeStart = voteTimeStart + bufferTime;
+const winningTimeStart     = voteWaitingTimeStart + secondsOnWinningPage
 
 const finishedDrawingText = "Good Job! We are waiting on the others now."
 const domain = "wss://art-name-wip.radiolaria.workers.dev/api/room/##room##/websocket"
@@ -66,11 +69,11 @@ class Game extends React.Component {
 
   state = {
     // If our websocket is ready.
-    ready: false,
+    ready:          false,
 
     // Lobby settings.
-    username: "",
-    lobbyCode: "",
+    username:       "",
+    lobbyCode:      "",
 
     // Help track timing for each.
     currentTime:    0,
@@ -78,10 +81,10 @@ class Game extends React.Component {
     secondsLeft:    0,
 
     // Drawing variables.
-    drawingCount: 1,
+    drawingCount:   1,
 
-    // "preload", "waiting", "drawing", "captions", "sync", "choices", "waiting-for-choices", "voting", "winner"
-    phase: "preload",
+    // "preload", "waiting", "drawing", "captions", "sync", "choices", "waiting-for-choices", "voting", "winning"
+    phase:          "preload",
   };
   /**
    * # loop
@@ -299,7 +302,18 @@ class Game extends React.Component {
     }
 
     if(this.state.phase === "winning"){
-      // winning
+      // Update our seconds left.
+      const base = this.state.startTimestamp + winningTimeStart;
+
+      // If we are past our time, reset the round.
+      if(this.state.currentTime > base){
+
+        // Reset redux.
+        // this.props.resetUserMade();
+
+        // Reset our state.
+        this.reset();
+      }
     }
   }
 
@@ -368,9 +382,7 @@ class Game extends React.Component {
       }catch(e){}
 
       return
-    }
-
-    
+    }    
   }
   /**
    * # connectToLobby
@@ -423,10 +435,18 @@ class Game extends React.Component {
       this.setState({ phase: "disconnected" });
     };
   };
-
-  // Resets the store so we can use it again.
+  /**
+   * # reset
+   * Reset the state so we can start a new round.
+   */
   reset = () => {
-    // TODO.
+    this.setState({
+      currentTime:    0,
+      startTimestamp: 0,
+      secondsLeft:    0,
+      drawingCount:   1,
+      phase:          "waiting",
+    });
   };
   /**
    * # pageSelector
@@ -439,35 +459,61 @@ class Game extends React.Component {
     switch(this.state.phase){
 
       // Waiting for the websocket connection.
-      case "preload": return { content: (<Loading text="Waiting for connection" />), text: "Connecting to lobby"};
+      case "preload": return {
+        content: (<Loading text="Waiting for connection" />),
+        text: "Connecting to lobby"
+      };
 
       // Waiting for the match to start.
-      case "waiting": return { content: (<GameWaitingPage username={this.state.username} />), text: "Waiting for players to ready up"};
+      case "waiting": return {
+        content: (<GameWaitingPage username={this.state.username} />),
+        text: "Waiting for players to ready up"
+      };
 
       // (CSP-11): Generate the page for the user to draw on to make their art.
-      case "drawing": 
-        return {
-          content: (
-            <GameDrawningPage
-              drawingCount={this.state.drawingCount}
-              secondsLeft={secondsToCountdown(this.state.secondsLeft)}
-              drawSubmit={()=>{ this.setState({ drawingCount: this.state.drawingCount + 1 }) }}
-              totalDrawings={totalDrawings}
-            />),
-          text: `Drawing Phase (${(this.state.drawingCount <= totalDrawings) ? this.state.drawingCount : totalDrawings} of ${totalDrawings})`
-        };
+      case "drawing": return {
+        content: (
+          <GameDrawningPage
+            drawingCount={this.state.drawingCount}
+            secondsLeft={secondsToCountdown(this.state.secondsLeft)}
+            drawSubmit={()=>{ this.setState({ drawingCount: this.state.drawingCount + 1 }) }}
+            totalDrawings={totalDrawings}
+          />),
+        text: `Drawing Phase (${(this.state.drawingCount <= totalDrawings) ? this.state.drawingCount : totalDrawings} of ${totalDrawings})`
+      };
 
       // (CSP-10): Generate the page for the user to write captions for art.
-      case "captions": return { content: (<GameCaptionPage secondsLeft={secondsToCountdown(this.state.secondsLeft)} />), text: "Write some captions"};
+      case "captions": return {
+        content: (<GameCaptionPage secondsLeft={secondsToCountdown(this.state.secondsLeft)} />),
+        text: "Write some captions"
+      };
 
       // Make sure everyone is done syncing.
-      case "sync": return { content: (<Loading text={finishedDrawingText} />), text: "Waiting for players to catch up" }
+      case "sync": return {
+        content: (<Loading text={finishedDrawingText} />),
+        text: "Waiting for players to catch up"
+      };
 
       // (CSP-30): Generate the page for the user to create a combo for voting.
-      case "choices": return { content: (<GameChoicePage secondsLeft={secondsToCountdown(this.state.secondsLeft)} done={()=>{ this.setState({ phase: "waiting-for-choices" }) }} />), text: "Create a combo!" }
+      case "choices": return {
+        content: (
+          <GameChoicePage
+            secondsLeft={secondsToCountdown(this.state.secondsLeft)}
+            done={()=>{ this.setState({ phase: "waiting-for-choices" }) }}
+            username={this.state.username}
+          />),
+        text: "Create a combo!"
+      };
 
       // Make sure everyone is done picking.
-      case "waiting-for-choices": return { content: (<Loading text={finishedDrawingText} secondsLeft={secondsToCountdown(this.state.secondsLeft)} />), text: "Waiting for players to catch up" }
+      case "waiting-for-choices": return {
+        content: (
+          <Loading
+            text={finishedDrawingText}
+            secondsLeft={secondsToCountdown(this.state.secondsLeft)}
+          />),
+        text: "Waiting for players to catch up"
+      };
 
       // (CSP-9): Generate the page for voting.
       case "voting": return {
@@ -478,16 +524,34 @@ class Game extends React.Component {
             secondsLeft={secondsToCountdown(this.state.secondsLeft)}
           />),
         text: "Vote for your favorite"
-      }
+      };
 
       // Wait for the users to finish voting.
-      case "waiting-for-votes": return { content: (<Loading text={finishedDrawingText} secondsLeft={secondsToCountdown(this.state.secondsLeft)} />), text: "Waiting for players to catch up" }
+      case "waiting-for-votes": return {
+        content: (
+          <Loading
+            text={finishedDrawingText}
+            secondsLeft={secondsToCountdown(this.state.secondsLeft)}
+          />),
+        text: "Waiting for players to catch up"
+      };
 
       // (CSP-12): Winner phase for the gamemode.
-      case "winning": return { content: (<Loading text={finishedDrawingText} />), text: "Winning" }
+      case "winning": return {
+        content: (
+          <GameWinningPage
+            done={()=>{ this.setState({ phase: "waiting-for-votes" }) }}
+            username={this.state.username}
+            secondsLeft={secondsToCountdown(this.state.secondsLeft)}
+          />),
+        text: "The winner!"
+      };
 
       // We had an error or lost internet access.
-      case "disconnected": return { content: (<GameErrorPage />), text: "Error: Connecting to server" }
+      case "disconnected": return {
+        content: (<GameErrorPage />),
+        text: "Error: Connecting to server"
+      };
 
       default:
         return { content: null, text: "Error"};
@@ -538,10 +602,13 @@ class Game extends React.Component {
 
 
 const myStateToProps = (state) => {
+
+  console.log("state", state)
+
   return {
     toSend: state.messagesReducer.list,
     users:  state.usersReducer.users,
   };
 };
 
-export default connect(myStateToProps, { addUsername, removeUsername, removeFirstToSend, setUsernameStatus, addVote, addArt, addCaption, addCombo })(Game);
+export default connect(myStateToProps, { addUsername, removeUsername, removeFirstToSend, setUsernameStatus, addVote, addArt, addCaption, addCombo, resetUserMade })(Game);
