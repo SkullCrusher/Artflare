@@ -488,9 +488,10 @@ class Game extends React.Component {
 
       // We had an error or lost internet access.
       case "disconnected": return { content: (<GameErrorPage />), text: "Error: Connecting to server" }
-    }
 
-    return { content: null, text: "Error"};
+      default:
+        return { content: null, text: "Error"};
+    }
   }
 
   componentDidMount = () => {

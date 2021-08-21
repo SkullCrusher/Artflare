@@ -36,7 +36,7 @@ const usersReducer = (state = initialState, action) => {
             let tmp = [];
 
             for(let i = 0; i < state.users.length; i += 1){
-                if(state.users[i].username != payload){
+                if(state.users[i].username !== payload){
                     tmp.push(state.users[i]);
                 }
             }

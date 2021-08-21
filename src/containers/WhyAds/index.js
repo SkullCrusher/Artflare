@@ -13,6 +13,8 @@ class WhyAds extends React.Component {
         </div>
         <div className="content">
           <iframe
+            id="funny"
+            title="funny"
             src="https://giphy.com/embed/Tfpbc1BGJqLNvjXg4P"
             width="480"
             height="270"
