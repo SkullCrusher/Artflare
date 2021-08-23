@@ -15,3 +15,8 @@ export const setUsernameStatus = payload => ({
     "type": types.SET_USERNAME_STATUS,
     payload
 })
+
+export const resetUsers = payload => ({
+    "type": types.RESET_USER,
+    payload
+})

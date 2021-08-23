@@ -15,7 +15,7 @@ import Loading          from '../../component/Loading';
 import PlannerBanner    from '../../component/PlayerBanner';
 
 // Redux.
-import { addUsername, removeUsername, setUsernameStatus } from "../../redux/actions/users";
+import { addUsername, removeUsername, setUsernameStatus, resetUsers } from "../../redux/actions/users";
 import { removeFirstToSend } from  '../../redux/actions/messages';
 import { addArt, addCaption, addCombo, addVote, resetUserMade } from '../../redux/actions/userMade';
 
@@ -574,6 +574,7 @@ class Game extends React.Component {
     clearInterval(this.timer);
 
     // Close our websocket and reset our redux.
+    this.props.resetUsers();
     this.props.resetUserMade();
     this.ws.close();
   }
@@ -603,10 +604,13 @@ class Game extends React.Component {
 
 
 const myStateToProps = (state) => {
+
+  console.log("state", state)
+
   return {
     toSend: state.messagesReducer.list,
     users:  state.usersReducer.users,
   };
 };
 
-export default connect(myStateToProps, { addUsername, removeUsername, removeFirstToSend, setUsernameStatus, addVote, addArt, addCaption, addCombo, resetUserMade })(Game);
+export default connect(myStateToProps, { resetUsers, addUsername, removeUsername, removeFirstToSend, setUsernameStatus, addVote, addArt, addCaption, addCombo, resetUserMade })(Game);

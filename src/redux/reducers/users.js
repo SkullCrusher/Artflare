@@ -45,6 +45,10 @@ const usersReducer = (state = initialState, action) => {
 
             return { ...state };
 
+        case types.RESET_USER:
+            state.users = [];
+            return { ...state };
+
         default:
             return state;
     };

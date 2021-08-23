@@ -11,6 +11,7 @@ const types = {
     // User types.
     "ADD_USERNAME":        "ADD_USERNAME",
     "REMOVE_USERNAME":     "REMOVE_USERNAME",
+    "RESET_USER":          "RESET_USER",
     "SET_USERNAME_STATUS": "SET_USERNAME_STATUS",
 
     // User made.
