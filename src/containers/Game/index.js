@@ -28,8 +28,8 @@ const bufferTime              = 10; // How many seconds buffer do we give each c
 
 // How many players to actually start a match (aka 2).
 const numberOfPlayersRequired = 1;  // 2;
-const secondsToDrawEachImage  = 10; // 90;
-const secondsToWriteCaptions  = 10; // 60;
+const secondsToDrawEachImage  = 60;
+const secondsToWriteCaptions  = 60;
 const secondsToChoose         = 20; //
 const secondsToVote           = 20; //
 const secondsOnWinningPage    = 20;
@@ -434,7 +434,7 @@ class Game extends React.Component {
 
       // Handle user joinned message (also called at first load). Example: {"joined":"dddebig1"}
       if(parsed.joined !== undefined){
-        this.props.addUsername({ username: parsed.joined, ready: false });
+        this.props.addUsername({ username: decodeURIComponent(parsed.joined), ready: false });
         return
       }
 
