@@ -419,6 +419,11 @@ class Game extends React.Component {
         return
       }
 
+      if(parsed.quit !== undefined){
+        this.props.removeUsername(parsed.quit);
+        return
+      }
+
       // Handle messages (all the data transfer). Example: {"name":"dddebig1","message":"","timestamp":1629332971906}
       if(parsed.message !== undefined){
         this.handleMessage(parsed);
