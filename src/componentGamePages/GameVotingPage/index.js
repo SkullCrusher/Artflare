@@ -1,6 +1,6 @@
 import React       from 'react';
 import { connect } from "react-redux";
-import { Button }  from 'antd';
+import { message, Button }  from 'antd';
 import CanvasDraw  from "react-canvas-draw";
 
 import { setUsernameStatus } from '../../redux/actions/users';
@@ -81,14 +81,27 @@ class GameVotingPage extends React.Component {
    * Load the default combination.
    */  
   componentDidMount(){
-    setTimeout(()=>{
-      this.handleMove(0);
-    }, 250);
+
+    // Move us back to waiting if no one voted.
+    if(this.props.combos.length < 1){
+      message.error('No one voted so we are resetting.');
+      this.props.triggerReset();
+    }else{
+      setTimeout(()=>{
+        this.handleMove(0);
+      }, 250);
+    }
   }
   /**
    * # render
    */
   render(){
+
+    // If we have literally NO votes, force it to restart.
+    if(this.props.combos.length < 1){
+      return null;
+    }
+
     return (
         <div className="c-voting-page">
             <div className="title">

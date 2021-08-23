@@ -87,6 +87,17 @@ class Game extends React.Component {
     phase:          "preload",
   };
   /**
+   * # forceBackToWaiting
+   * on the voting page if no one voted force it back.
+   */
+  forceBackToWaiting = () => {
+    // Reset redux.
+    this.props.resetUserMade();
+
+    // Reset our state.
+    this.reset();
+  }
+  /**
    * # loop
    * Basically the game ticker to move things forward.
    */
@@ -532,6 +543,7 @@ class Game extends React.Component {
             done={()=>{ this.setState({ phase: "waiting-for-votes" }) }}
             username={this.state.username}
             secondsLeft={secondsToCountdown(this.state.secondsLeft)}
+            triggerReset={this.forceBackToWaiting}
           />),
         text: "Vote for your favorite"
       };
