@@ -60,7 +60,7 @@ class GameDrawningPage extends React.Component {
 
     // Bump us to the next record.
     if(force){
-        this.props.drawSubmit()
+        // this.props.drawSubmit()
     }
 
     this.setState({ submitting: false })
@@ -75,9 +75,10 @@ class GameDrawningPage extends React.Component {
 
             if(!this.state.done){
                 this.submit(false);
+                this.setState({ done: true })
+
                 setTimeout(()=>{
-                    this.props.drawSubmit();
-                    this.setState({ done: true })
+                    this.props.drawSubmit();    
                 }, 250);
             }
         }else{
@@ -151,7 +152,7 @@ class GameDrawningPage extends React.Component {
                         Finished Drawing?
                     </div>
                     <div className="submit">
-                    <Button type="primary" size="large" loading={this.state.submitting} danger onClick={()=>{ this.submit(true) }}>
+                    <Button type="primary" size="large" loading={this.state.submitting} danger onClick={()=>{ this.props.drawSubmit() }}>
                         Submit
                     </Button>
                     </div>

@@ -147,9 +147,6 @@ const userMadeReducer = (state = initialState, action) => {
             return { ...state };
 
         case types.ADD_COMBO:
-
-            console.log("redux payload", payload)
-
             state.combos.push(payload);
             return { ...state };
 

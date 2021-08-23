@@ -172,7 +172,7 @@ class Game extends React.Component {
         this.setState({ drawingCount: this.state.drawingCount + 1 })
       }
 
-      if(this.state.drawingCount > (totalDrawings + 2)){
+      if(this.state.drawingCount > (totalDrawings + 1)){
         this.setState({ phase: "captions" });
       }
 
@@ -468,6 +468,14 @@ class Game extends React.Component {
       drawingCount:   1,
       phase:          "waiting",
     });
+
+    // Reset the ready status for all of the users to false.
+    for(let i = 0; i < this.props.users.length; i += 1){
+      this.props.setUsernameStatus({
+        username: this.props.users[i].username,
+        newState: false,
+      });
+    }
   };
   /**
    * # pageSelector

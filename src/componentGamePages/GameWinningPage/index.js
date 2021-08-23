@@ -39,6 +39,8 @@ class GameWinningPage extends React.Component {
   componentDidMount(){
     setTimeout(()=>{
 
+      try {
+
         let compiledMap = {}
 
         // Sum up the votes.
@@ -46,10 +48,10 @@ class GameWinningPage extends React.Component {
             let current = this.props.votes[i];
 
             // compiledMap
-            if(compiledMap[current.maker] === undefined){
-                compiledMap[current.maker] = 1;
+            if(compiledMap[current.username] === undefined){
+                compiledMap[current.username] = 1;
             }else{
-                compiledMap[current.maker] += 1;
+                compiledMap[current.username] += 1;
             }
         }
 
@@ -69,7 +71,7 @@ class GameWinningPage extends React.Component {
 
         // The winner.
         for(let i = 0; i < this.props.combos.length; i += 1){
-            if(this.props.combos[i].maker === highest){
+            if(this.props.combos[i].username === highest){
                 found = this.props.combos[i]
                 break
             }
@@ -82,13 +84,16 @@ class GameWinningPage extends React.Component {
 
         // Set the variables in place.
         this.setState({
-            winner:  found.maker,
+            winner:  found.username,
             art:     found.art,
             caption: found.caption,
         });
 
         // Render the art.
         this.currentCanvas.loadSaveData(found.art.art, true)
+      }catch(e){
+        console.log("e", e)
+      }
     }, 250);
   }
   /**
