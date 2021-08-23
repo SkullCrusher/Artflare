@@ -24,5 +24,5 @@ wrangler publish --new-class ArtRoom --new-class RateLimiter
 
 3. Setup Cloudflare page for the ui on the Cloudflare website to deploy the ui automatically.
 
-## Bugs / Issues
+## Bugs and Issues
 I built this quickly so I am sure there is bugs. Open an issue on Github and I'll try to fix it for you.
