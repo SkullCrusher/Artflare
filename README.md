@@ -9,6 +9,9 @@ Each player draws some art and writes some captions for the art at random. Then 
 ## Example
 I have a running instance hosted on Cloudflare pages at [`artflare.io`](https://artflare.io)
 
+## Why was this made?
+I built this for fun to enter the 2021 Cloudflare summer developer challenge and hopefully get some swag. I had very little time to build this so it's super rough, it's just prototype to show a concept. I'm not a UI dev so styles are not the best :(
+
 ## Getting started
 This is running on Cloudflare pages and Cloudflare workers.
 
@@ -21,5 +24,5 @@ wrangler publish --new-class ArtRoom --new-class RateLimiter
 
 3. Setup Cloudflare page for the ui on the Cloudflare website to deploy the ui automatically.
 
-## Why was this made?
-I built this for fun to enter the 2021 Cloudflare summer developer challenge and hopefully get some swag. I had very little time to build this so it's super rough, it's just prototype to show a concept.
+## Bugs and Issues
+I built this quickly so I am sure there is bugs. Open an issue on Github and I'll try to fix it for you.
