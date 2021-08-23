@@ -3,6 +3,19 @@ import React from 'react';
 import { Button, Input, Card, Divider, message } from 'antd';
 import { Link, Redirect }    from "react-router-dom";
 
+const random = (length = 8) => {
+  // Declare all characters
+  let chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+
+  // Pick characers randomly
+  let str = '';
+  for (let i = 0; i < length; i++) {
+      str += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+
+  return str;
+};
+
 class Lobby extends React.Component {
 
   state = {
@@ -48,7 +61,7 @@ class Lobby extends React.Component {
    * @returns {bool}
    */
   validateLobbyCode = (arg) => {
-    if(arg.length !== 10){
+    if(arg.length < 10 || arg.length > 16){
       message.error('Error: Invalid lobby code.')
       return false;
     }
@@ -82,8 +95,8 @@ class Lobby extends React.Component {
    * @returns none
    */
   handleCreateButton = () => {
-    // Force the lobby code to be upper case.
-    let lobbyCodeFixed = this.state.lobbyCode.toUpperCase();
+    // Create them a lobby randomly.
+    let lobbyCodeFixed = random(16).toUpperCase();
 
     if(!this.validateUsername(this.state.username)){
       return;
