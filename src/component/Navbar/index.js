@@ -15,7 +15,7 @@ class Navbar extends React.Component {
         </div>
         <div className="menu-items">
           <div className="item">
-            <a href="/privacy">Github</a>
+            <a href="https://github.com/SkullCrusher/Artflare">Github</a>
           </div>
           <div className="item">
             <Link to="/privacy">Privacy</Link>
