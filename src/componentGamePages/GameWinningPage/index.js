@@ -1,6 +1,7 @@
 import React       from 'react';
 import { connect } from "react-redux";
 import CanvasDraw  from "react-canvas-draw";
+import Confetti    from 'react-confetti'
 
 import { setUsernameStatus } from '../../redux/actions/users';
 import { addToSend } from '../../redux/actions/messages';
@@ -131,7 +132,12 @@ class GameWinningPage extends React.Component {
                 </div>
               </div>
             </div>
-
+          <div>
+          <Confetti
+            width={960}
+            height={750}
+          />
+          </div>
         </div>
     )
   };
