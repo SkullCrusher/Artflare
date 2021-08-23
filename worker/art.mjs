@@ -296,7 +296,7 @@ export class ArtRoom {
 
     // Load the last 100 messages from the chat history stored on disk, and send them to the
     // client.
-    let storage = await this.storage.list({reverse: true, limit: 100});
+    let storage = await this.storage.list({reverse: true, limit: 1}); // 100
     let backlog = [...storage.values()];
     backlog.reverse();
     backlog.forEach(value => {
@@ -474,7 +474,7 @@ export class RateLimiter {
       //
       // We provide a "grace" period of 20 seconds, meaning that the client can make 4-5 requests
       // in a quick burst before they start being limited.
-      let cooldown = Math.max(0, this.nextAllowedTime - now - 20);
+      let cooldown = 0; // Math.max(0, this.nextAllowedTime - now - 200);
       return new Response(cooldown);
     })
   }

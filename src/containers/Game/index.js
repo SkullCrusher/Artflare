@@ -328,6 +328,14 @@ class Game extends React.Component {
         return
       }
 
+       // @@art@@
+      if(arg.message.includes("@@ready@@")){
+        this.props.setUsernameStatus({
+          username: arg.name,
+          newState: true,
+        });
+      }
+
       // @@art@@
       if(arg.message.includes("@@art@@")){
         let cleanedMessage = arg.message.replace("@@art@@", "")
