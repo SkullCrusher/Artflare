@@ -7,9 +7,8 @@ Each player draws some art and writes some captions for the art at random. Then 
 ![logo](example.gif)
 
 ## Getting started
-To run this you just have to yarn install and deploy the wrangler model.
+To run this you just have to yarn install and deploy the wrangler model. Once you get your worker url replace the domain value in "src\containers\Game\index.js"
 
-## Installing
 ```console
 yarn install
 wrangler publish --new-class ArtRoom --new-class RateLimiter
