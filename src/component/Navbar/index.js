@@ -15,9 +15,6 @@ class Navbar extends React.Component {
         </div>
         <div className="menu-items">
           <div className="item">
-            <a href="https://discord.gg/8GWC5xJ53q">Join Discord</a>
-          </div>
-          <div className="item">
             <Link to="/privacy">Privacy</Link>
           </div>
           <div className="item">
