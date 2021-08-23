@@ -1,5 +1,8 @@
 import React from 'react';
 import { connect } from "react-redux";
+import { message } from 'antd';
+import copy from 'copy-to-clipboard';
+
 
 class PlayerBanner extends React.Component {
 
@@ -30,11 +33,17 @@ class PlayerBanner extends React.Component {
   }
 
   copyCode = () => {
-    // this.props.lobbyCode
-    alert("copy")
+
+    // If we have a port in the url.
+    const port = (Number(window.location.port) !== 80) ? `:${window.location.port}` : ``;
+
+    // Build the url link for users.
+    const built = `${window.location.protocol}//${window.location.hostname}${port}?lobby=${this.props.lobbyCode}`;
 
     // Copy link to clipboard.
+    copy(built);
 
+    message.success('Link copied to your clipboard');
   }
 
   /**

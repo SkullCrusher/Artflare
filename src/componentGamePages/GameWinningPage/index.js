@@ -1,6 +1,5 @@
 import React       from 'react';
 import { connect } from "react-redux";
-import { Button }  from 'antd';
 import CanvasDraw  from "react-canvas-draw";
 
 import { setUsernameStatus } from '../../redux/actions/users';
