@@ -12,6 +12,8 @@ I have a running instance hosted on Cloudflare pages at [`artflare.io`](https://
 ## Why was this made?
 I built this for fun to enter the 2021 Cloudflare summer developer challenge and hopefully get some swag. I had very little time to build this so it's super rough, it's just prototype to show a concept.
 
+I'm not a UI dev so styles are not the best :(
+
 ## Getting started
 This is running on Cloudflare pages and Cloudflare workers.
 
