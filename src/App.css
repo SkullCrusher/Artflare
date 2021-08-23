@@ -23,6 +23,12 @@
 .c-legal .go-back {
   margin-top: 35px; }
 
+.c-homepage .title {
+  margin-bottom: 20px; }
+  .c-homepage .title .text {
+    font-size: 24px;
+    font-weight: bold; }
+
 .c-navigation {
   height: 80px; }
   .c-navigation .logo {
@@ -328,6 +334,17 @@
   font-size: 12px; }
   .c-winner .details div {
     margin-top: 5px; }
+
+.about-us .item {
+  margin-top: 40px;
+  margin-left: 25%;
+  width: 50%; }
+  .about-us .item .title {
+    font-weight: bold;
+    font-size: 16px; }
+  .about-us .item .text {
+    margin-top: -10px;
+    font-size: 12px; }
 
 .c-App {
   height: 100%;

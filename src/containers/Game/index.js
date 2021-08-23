@@ -27,14 +27,14 @@ const totalDrawings           = 3;  // How many pictures are they gonna draw.
 const bufferTime              = 10; // How many seconds buffer do we give each client.
 
 // How many players to actually start a match (aka 2).
-const numberOfPlayersRequired = 1;  // 2;
-const secondsToDrawEachImage  = 60;
-const secondsToWriteCaptions  = 60;
-const secondsToChoose         = 20; //
-const secondsToVote           = 20; //
+const numberOfPlayersRequired = 1;
+const secondsToDrawEachImage  = 30;
+const secondsToWriteCaptions  = 30;
+const secondsToChoose         = 20;
+const secondsToVote           = 30;
 const secondsOnWinningPage    = 20;
 
-// Base time calc.
+// Base time calc (It's a funky system).
 const captionStart         = (secondsToDrawEachImage * totalDrawings) + secondsToWriteCaptions;
 const syncStart            = captionStart + bufferTime;
 const choicesStart         = syncStart + secondsToChoose;
@@ -637,9 +637,6 @@ class Game extends React.Component {
 
 
 const myStateToProps = (state) => {
-
-  console.log("state", state)
-
   return {
     toSend: state.messagesReducer.list,
     users:  state.usersReducer.users,

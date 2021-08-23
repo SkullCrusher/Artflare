@@ -1,7 +1,7 @@
 import React       from 'react';
-// import { Link }    from "react-router-dom";
 
-import Lobby from "../../component/Lobby";
+import AboutUs from "../../component/AboutUs";
+import Lobby   from "../../component/Lobby";
 
 class Homepage extends React.Component {
 
@@ -10,8 +10,13 @@ class Homepage extends React.Component {
   render(){
     return (
       <div className="c-homepage">
-        HOME PAGE
+        <div className="title">
+          <div className="text">
+            Connect To Game
+          </div>
+        </div>
         <Lobby />
+        <AboutUs />
       </div>
       )
   };
